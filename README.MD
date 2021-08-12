@@ -1,5 +1,9 @@
 # Command Line Snippets
 
+### Prerequisites
+1. Prometheus 2.x.x running locally
+2. OpenJDK to build example spring app
+
 ### Prometheus
 ```
 cd prometheus-2.29.1
