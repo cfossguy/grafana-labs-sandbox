@@ -2,4 +2,5 @@
 /prometheus-2.29.1/**
 /spring-node/target/**
 /spring-node/.mvn/**
+/data/**
 .idea/**
