@@ -1,0 +1,5 @@
+groups:
+- name: requests-node
+  rules:
+  - record: job_instance_group:http_server_requests_seconds_count:avg_rate30s
+    expr: avg by (job, instance, group) (rate(http_server_requests_seconds_count[30s]))

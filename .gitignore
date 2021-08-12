@@ -1,0 +1,5 @@
+# exclude everything except directory foo/bar
+/prometheus-2.29.1/**
+/spring-node/target/**
+/spring-node/.mvn/**
+.idea/**
