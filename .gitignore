@@ -1,6 +1,5 @@
 # exclude everything except directory foo/bar
 /spring-node/target/**
-/spring-node/.mvn/**
 /data/**
 .idea/**
 
