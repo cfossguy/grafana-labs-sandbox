@@ -2,6 +2,7 @@
 /spring-node/target/**
 /data/**
 .idea/**
+**/.DS_Store
 
 # exclude local deploy configuration files and config files that contain secrets
 .config/**
