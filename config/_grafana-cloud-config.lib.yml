@@ -1,0 +1,6 @@
+#@ def remote_write():
+  - url: https://prometheus-blocks-prod-us-central1.grafana.net/api/prom/push
+    basic_auth:
+      username: 179137
+      password: eyJrIjoiNjc1ZjFiMGU4YzRmYTg1ODI2MjJhYWM2ZGUwNzJiYmFkZTA1OTIyYyIsIm4iOiJ0ZXN0IiwiaWQiOjUyOTU1Nn0=
+#@ end

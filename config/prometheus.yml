@@ -1,10 +1,17 @@
+#! shared functionality can be extracted into separate files,
+#! then loaded in by their function name, especially when functions contain secrets
+
+#! YAML library files must be named *.lib.yml
+#@ load("_grafana-cloud-config.lib.yml", "remote_write")
+
+remote_write: #@ remote_write()
+
 rule_files:
   - 'prometheus-rules.yml'
 
 scrape_configs:
   - job_name:       'spring-node'
 
-    # Override the global default and scrape targets from this job every 5 seconds.
     scrape_interval: 5s
 
     metrics_path: '/actuator/prometheus'
