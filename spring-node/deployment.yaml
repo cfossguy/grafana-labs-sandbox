@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: spring-node
+  name: spring-node
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: spring-node
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: spring-node
+    spec:
+      containers:
+      - image: williamsjt/spring-node
+        name: spring-node
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: spring-node
+  name: spring-node
+spec:
+  ports:
+  - name: 8082-8082
+    port: 8082
+    protocol: TCP
+    targetPort: 8082
+  selector:
+    app: spring-node
+  type: ClusterIP
+status:
+  loadBalancer: {}

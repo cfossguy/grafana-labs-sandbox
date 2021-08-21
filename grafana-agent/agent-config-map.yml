@@ -1,0 +1,8 @@
+#@ load("_grafana-cloud-config.lib.yml", "agent_yaml")
+#@ load("@ytt:data", "data")
+---
+kind: ConfigMap
+metadata:
+  name: grafana-agent
+apiVersion: v1
+data: #@ agent_yaml()

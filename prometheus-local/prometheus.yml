@@ -1,0 +1,17 @@
+#@ load("_grafana-cloud-grafana-agent.lib.yml", "remote_write")
+
+remote_write: #@ remote_write()
+
+rule_files:
+  - 'prometheus-rules.yml'
+
+scrape_configs:
+  - job_name: 'spring-node'
+    scrape_interval: 5s
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'localhost:8082' ]
+        labels:
+          group: 'production'
+
+
