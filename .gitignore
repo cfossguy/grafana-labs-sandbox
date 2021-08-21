@@ -4,6 +4,7 @@
 .idea/**
 **/.DS_Store
 
-# exclude local deploy configuration files and config files that contain secrets
+# exclude local deploy configuration files and grafana-agent files that contain secrets
 .config/**
 /**/_*.yml
+/**/.env
