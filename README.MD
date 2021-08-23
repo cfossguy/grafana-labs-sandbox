@@ -41,16 +41,18 @@ kubectl rollout restart deployment/grafana-agent
 ### Spring Boot on k8s
 ```
 ./mvnw spring-boot:build-image
-docker tag demo:0.0.1-SNAPSHOT williamsjt/spring-node
-docker push williamsjt/spring-node
-kubctl -f ./deployment.yaml
+docker tag demo:0.0.1-SNAPSHOT williamsjt/spring-node:0.0.2
+docker push williamsjt/spring-node:0.0.2
+kubectl apply -f ./spring-node/deployment.yaml
+kubectl get service spring-node -w 
 ```
 
-spring boot app prometheus endpoint http://localhost:8082/actuator/prometheus
+local - spring boot app prometheus endpoint http://localhost:8082/actuator/prometheus
+local - spring boot app prometheus endpoint http://localhost:8082/fast and http://localhost:8082/slow...
+k8s - spring boot app endpoint http://EXTERNAL-IP/fast and http://EXTERNAL-IP/slow...
 
 ### K6 load test
 ```
-kubectl port-forward svc/spring-node 8082:8082
 cd k6
 k6 run --vus 10 --duration 300s script.js
 ```

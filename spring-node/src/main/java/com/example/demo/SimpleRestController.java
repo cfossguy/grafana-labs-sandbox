@@ -1,26 +1,34 @@
 package com.example.demo;
 
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import java.util.concurrent.TimeUnit;
-import java.lang.InterruptedException;
+
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
 
 @RestController
 class SimpleRestController {
+
+  Logger logger = LoggerFactory.getLogger(SimpleRestController.class);
 
   @GetMapping("/slow")
   String slow() throws InterruptedException{
     int delay = new Random().nextInt(3) + 1;
     TimeUnit.SECONDS.sleep(delay);
-    return String.format("Delay of %d seconds", delay);
+    String mockResult = String.format("Slow method call that has random delay: %d seconds", delay);
+    logger.info(mockResult);
+    return mockResult;
   }
 
   @GetMapping("/fast")
   String fast() {
-    return "that was sooo fast";
+    String mockResult = "Freaky fast method call that does nothing";
+    logger.info(mockResult);
+    return mockResult;
   }
 
   @ExceptionHandler(InterruptedException.class)

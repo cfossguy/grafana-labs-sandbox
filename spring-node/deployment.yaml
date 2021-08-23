@@ -1,7 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     app: spring-node
   name: spring-node
@@ -18,7 +17,7 @@ spec:
         app: spring-node
     spec:
       containers:
-      - image: williamsjt/spring-node
+      - image: williamsjt/spring-node:0.0.2
         name: spring-node
         resources: {}
 status: {}
@@ -26,18 +25,21 @@ status: {}
 apiVersion: v1
 kind: Service
 metadata:
-  creationTimestamp: null
+  annotations:
+    cloud.google.com/neg: '{"ingress":true}'
+  finalizers:
+  - service.kubernetes.io/load-balancer-cleanup
   labels:
     app: spring-node
   name: spring-node
+  namespace: default
 spec:
+  externalTrafficPolicy: Cluster
   ports:
-  - name: 8082-8082
-    port: 8082
+  - port: 80
     protocol: TCP
     targetPort: 8082
   selector:
     app: spring-node
-  type: ClusterIP
-status:
-  loadBalancer: {}
+  sessionAffinity: None
+  type: LoadBalancer
