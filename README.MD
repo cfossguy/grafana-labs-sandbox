@@ -48,8 +48,8 @@ kubectl get service spring-node -w
 ```
 
 * local - spring boot app prometheus endpoint http://localhost:8082/actuator/prometheus
-* local - spring boot app prometheus endpoint http://localhost:8082/fast and http://localhost:8082/slow...
-* k8s - spring boot app endpoint http://EXTERNAL-IP/fast and http://EXTERNAL-IP/slow...
+* local - spring boot app prometheus endpoint http://localhost:8082/fast and http://localhost:8082/slow
+* k8s - spring boot app endpoint http://EXTERNAL-IP/fast and http://EXTERNAL-IP/slow
 
 ### K6 load test
 ```
