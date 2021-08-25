@@ -19,6 +19,8 @@ spec:
       containers:
       - image: williamsjt/spring-node:0.0.2
         name: spring-node
+        ports:
+          - containerPort: 80
         resources: {}
 status: {}
 ---

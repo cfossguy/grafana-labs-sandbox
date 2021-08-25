@@ -30,12 +30,17 @@ cd spring-node
 ./mvnw spring-boot:run
 ```
 
-### Grafana AGent k8s
+### Grafana Agent k8s 
+1. Run ytt to inject secrets into configs
+2. Delete grafana agent deployment
+3. Delete grafana agent logs daemonset
+4. Apply grafana agent configmap
+5. Apply grafana agent logs configmap
+6. Deploy grafana agent deployment
+7. Deploy grafana agent logs daemonset
+8. Watch the pod create/runs
 ```
-ytt -f ./grafana-agent --output-files ./.config
-kubectl apply -f ./.config/agent-config-map.yml
-kubectl apply -f ./.config/agent-bare.yml
-kubectl rollout restart deployment/grafana-agent
+./install-agent.sh
 ```
 
 ### Spring Boot on k8s
@@ -55,4 +60,19 @@ kubectl get service spring-node -w
 ```
 cd k6
 k6 run --vus 10 --duration 300s script.js
+```
+
+### Magic YAML Snippets
+#### prometheus scrape all spring-boot endpoints in k8s cluster
+```
+scrape_configs:
+  - job_name: integrations/spring-boot
+    metrics_path: /actuator/prometheus
+    kubernetes_sd_configs:
+      - role: endpoints
+    relabel_configs:
+      - source_labels: [ __meta_kubernetes_endpoints_name ]
+        target_label: endpoint_name
+        action: replace
+        replacement: $1
 ```
