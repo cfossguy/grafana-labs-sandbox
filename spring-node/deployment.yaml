@@ -17,7 +17,8 @@ spec:
         app: spring-node
     spec:
       containers:
-      - image: williamsjt/spring-node:0.0.2
+      - image: williamsjt/spring-node:latest
+        imagePullPolicy: Always
         name: spring-node
         ports:
           - containerPort: 80

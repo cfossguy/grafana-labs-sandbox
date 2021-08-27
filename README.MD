@@ -45,10 +45,12 @@ cd spring-node
 
 ### Spring Boot on k8s
 ```
+./mvnw clean package
 ./mvnw spring-boot:build-image
-docker tag demo:0.0.1-SNAPSHOT williamsjt/spring-node:0.0.2
-docker push williamsjt/spring-node:0.0.2
+docker tag demo:0.0.1-SNAPSHOT williamsjt/spring-node:latest
+docker push williamsjt/spring-node:latest
 kubectl apply -f ./spring-node/deployment.yaml
+kubectl rollout restart deployment spring-node
 kubectl get service spring-node -w 
 ```
 
