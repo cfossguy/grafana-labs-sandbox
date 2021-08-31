@@ -61,7 +61,7 @@ kubectl get service spring-node -w
 ### K6 load test
 ```
 cd k6
-k6 run --vus 10 --duration 300s script.js
+k6 run --vus 20 --duration 300s script.js
 ```
 
 ### Magic YAML Snippets
