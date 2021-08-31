@@ -56,6 +56,9 @@ spec:
       labels:
         name: grafana-agent
     spec:
+      hostPID: true
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       containers:
       - args:
         - -config.file=/etc/agent/agent.yaml
@@ -67,16 +70,39 @@ spec:
             fieldRef:
               fieldPath: spec.nodeName
         image: grafana/agent:v0.18.2
-        imagePullPolicy: IfNotPresent
         name: agent
         ports:
         - containerPort: 12345
           name: http-metrics
         volumeMounts:
-        - mountPath: /etc/agent
-          name: grafana-agent
+        - name: grafana-agent
+          mountPath: /etc/agent
+        - name: rootfs
+          mountPath: /host/root
+          readOnly: true
+        - name: sysfs
+          mountPath: /host/sys
+          readOnly: true
+        - name: procfs
+          mountPath: /host/proc
+          readOnly: true
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          capabilities:
+            add: [ "SYS_TIME" ]
+          privileged: true
+          runAsUser: 0
       serviceAccount: grafana-agent
       volumes:
-      - configMap:
+      - name: grafana-agent
+        configMap:
           name: grafana-agent
-        name: grafana-agent
+      - name: rootfs
+        hostPath:
+          path: /
+      - name: sysfs
+        hostPath:
+          path: /sys
+      - name: procfs
+        hostPath:
+          path: /proc

@@ -1,4 +1,4 @@
-#@ load("_grafana-cloud-grafana-agent.lib.yml", "remote_write")
+#@ load("_grafana-cloud-config.lib.yml", "remote_write")
 
 remote_write: #@ remote_write()
 

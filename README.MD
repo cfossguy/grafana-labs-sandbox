@@ -78,3 +78,16 @@ scrape_configs:
         action: replace
         replacement: $1
 ```
+
+### Install Node exporter directly on linux host
+``` 
+gcloud compute ssh <NODE_NAME> 
+cd /var/lib/toolbox
+sudo wget https://github.com/prometheus/node_exporter/releases/download/v1.2.2/node_exporter-1.2.2.linux-amd64.tar.gz
+sudo tar -xvf /var/lib/toolbox/node_exporter-1.2.2.linux-amd64.tar.gz
+./node_exporter
+sudo wget https://github.com/prometheus/prometheus/releases/download/v2.29.2/prometheus-2.29.2.linux-amd64.tar.gz
+sudo tar -xvf /var/lib/toolbox/prometheus-2.29.2.linux-amd64.tar.gz
+sudo mv prometheus-2.29.2.linux-amd64/ prometheus
+./prometheus
+```
