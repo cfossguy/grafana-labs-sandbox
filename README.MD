@@ -78,16 +78,56 @@ scrape_configs:
         action: replace
         replacement: $1
 ```
+#### Grafana agent tweaks to capture node_exporter metrics (permissions/mounts)
+Refer to "spec" section in [grafana-agent/agent-bare.yml](./grafana-agent/agent-bare.yml). You also need 
+to tweak the "agent.yaml |" output to look like:
+
+```
+server:
+  http_listen_port: 12345
+integrations:
+  agent:
+    enabled: true
+  node_exporter:
+    enabled: true
+    rootfs_path: /host/root
+    sysfs_path: /host/sys
+    procfs_path: /host/proc
+  prometheus:
+    wal_directory: /tmp/grafana-agent-wal
+    global:
+      scrape_interval: 15s
+      remote_write:...
+```
 
 ### Install Node exporter directly on linux host
+#### Do the following in GCP or equivalent cloud/on-prem server
 ``` 
 gcloud compute ssh <NODE_NAME> 
-cd /var/lib/toolbox
 sudo wget https://github.com/prometheus/node_exporter/releases/download/v1.2.2/node_exporter-1.2.2.linux-amd64.tar.gz
-sudo tar -xvf /var/lib/toolbox/node_exporter-1.2.2.linux-amd64.tar.gz
-./node_exporter
+sudo tar -xvf node_exporter-1.2.2.linux-amd64.tar.gz
+cd node_exporter-1.2.2.linux-amd64
+./node_exporter &
 sudo wget https://github.com/prometheus/prometheus/releases/download/v2.29.2/prometheus-2.29.2.linux-amd64.tar.gz
-sudo tar -xvf /var/lib/toolbox/prometheus-2.29.2.linux-amd64.tar.gz
-sudo mv prometheus-2.29.2.linux-amd64/ prometheus
-./prometheus
+sudo tar -xvf prometheus-2.29.2.linux-amd64.tar.gz
+cd prometheus-2.29.2.linux-amd64
+./prometheus --config.file=prometheus.yml &
+```
+#### Do the following in local sandbox 
+ytt -f ./prometheus-local --output-files ./.config
+scp ./.config/prometheus-wordpress.yml to PROMETHEUS_HOME
+
+### Install Promtail(OSS logging agent) on linux host
+``` 
+gcloud compute ssh <NODE_NAME> 
+https://github.com/grafana/loki/releases/download/v2.3.0/promtail-linux-amd64.zip
+sudo unzip promtail-linux-amd64.zip
+sudo chown USER:GROUP promtail-linux-amd64
+./promtail-linux-amd64 
+```
+#### Log Browser Pattern Match Snippet
+Apache Web Server
+```
+{host="HOSTNAME",job="JOB"} | pattern `<IP> - - <ts> "<method> <uri> <_>" <status> <bytes> "<_>" "<client> <_>"` | method="GET" | method="GET"
+sum by (method, status) (rate({host="HOSTNAME",job="JOB"} | pattern `<IP> - - <ts> "<method> <uri> <_>" <status> <bytes> "<_>" "<client> <_>"`[$__interval]))
 ```

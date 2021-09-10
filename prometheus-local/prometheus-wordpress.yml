@@ -1,0 +1,34 @@
+#@ load("_grafana-cloud-config.lib.yml", "remote_write")
+
+remote_write: #@ remote_write()
+
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+- job_name: wordpress-node
+  static_configs:
+    - targets: ['localhost:9100']
+      labels:
+        group: development
+
+- job_name: wordpress-metrics
+  static_configs:
+    - targets: ['localhost']
+      labels:
+        group: development
+  scrape_interval: "15s"
+  metrics_path: "/wp-json/metrics"
+  params:
+    prometheus: ['fg98dfgkj']
+    users: ['yes']
+    posts: ['yes']
+    pages: ['yes']
+    autoload: ['yes']
+    transient: ['yes']
+    user_sessions: ['yes']
+    posts_without_content: ['yes']
+    posts_without_title: ['yes']
+    db_size: ['yes']
+    pending_updates: ['yes']
+

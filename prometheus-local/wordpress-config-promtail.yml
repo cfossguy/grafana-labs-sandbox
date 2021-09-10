@@ -1,0 +1,22 @@
+#@ load("_grafana-cloud-config.lib.yml", "loki_write")
+
+client: #@ loki_write()
+
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+scrape_configs:
+ - job_name: linux-system
+   pipeline_stages:
+   static_configs:
+   - targets:
+      - localhost
+     labels:
+       job: wordpress-logs
+       host: se-jwilliams-wordpress-vm
+       group: development
+       __path__: /var/log/apache2/access.log
