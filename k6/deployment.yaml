@@ -1,0 +1,15 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: k6-loadgen
+spec:
+  schedule: "*/2 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: k6-loadgen
+            image: loadimpact/k6
+            command: ["k6", "run", "https://raw.githubusercontent.com/cfossguy/grafana-labs-sandbox/8f368d0bef55922f66968b387383b259d0bf83fc/k6/script.js"]
+          restartPolicy: Never

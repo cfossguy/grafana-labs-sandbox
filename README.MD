@@ -61,7 +61,7 @@ kubectl get service spring-node -w
 ### K6 load test
 ```
 cd k6
-k6 run --vus 20 --duration 300s script.js
+k6 run --vus 10 --duration 300s script.js
 ```
 
 ### Magic YAML Snippets
@@ -131,3 +131,16 @@ Apache Web Server
 {host="HOSTNAME",job="JOB"} | pattern `<IP> - - <ts> "<method> <uri> <_>" <status> <bytes> "<_>" "<client> <_>"` | method="GET" | method="GET"
 sum by (method, status) (rate({host="HOSTNAME",job="JOB"} | pattern `<IP> - - <ts> "<method> <uri> <_>" <status> <bytes> "<_>" "<client> <_>"`[$__interval]))
 ```
+
+#### Run Graphite in Docker & connect to Grafana 
+```
+docker run -d --name graphite -p 80:80 -p 8080:8080 -p 2003-2004:2003-2004 -p 2023-2024:2023-2024 -p 8125:8125/udp -p 8126:8126 graphiteapp/graphite-statsd
+```
+
+1. Connect Grafana to Graphite - browse to http://localhost:3000 and log in with admin/admin
+2. Add Data Source
+3. Get Graphite container IP - docker inspect <container-id> | grep -i ipaddr
+4. URL: http://localhost:8080
+5. Save and Test
+6. Click on Dashboards tab (next to Settings tab)
+7.  Import Graphite Carbon Metrics dashboard
