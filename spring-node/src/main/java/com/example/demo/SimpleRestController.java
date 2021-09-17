@@ -50,13 +50,18 @@ class SimpleRestController {
     String response = "You have a 1 in 100 chance of NOT getting this message.";
     Random random = new Random();
     int nbr = random.nextInt(100) + 1;
-    if (nbr == 100) {
-        logger.error("Something very bad just happened.");
-        throw new ResponseStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR);
+    try {
+        if (nbr == 100) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        logger.info(response);
+        return response;
     }
-    logger.info(response);
-    return response;
+    catch (Exception e){
+        logger.error(e.getMessage(), e);
+        return e.getMessage();
+    }
   }
 
   @GetMapping("/trip/{count}")
