@@ -45,13 +45,14 @@ class SimpleRestController {
     return String.format("About to go to sleep for %d second", nbr);
   }
 
-  @GetMapping("/roulette")
-  String roulette() {
-    String response = "You have a 1 in 100 chance of NOT getting this message.";
+  @GetMapping("/roulette/{odds}")
+  String roulette(@PathVariable("odds") int odds) throws InterruptedException {
+    String response = String.format("You have a 1 in %d chance of NOT getting this message.", odds);
     Random random = new Random();
-    int nbr = random.nextInt(100) + 1;
+    int nbr = random.nextInt(odds) + 1;
 
-    if (nbr == 1000) {
+    if (nbr == odds) {
+        TimeUnit.SECONDS.sleep(1);
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
     }
     logger.info(response);

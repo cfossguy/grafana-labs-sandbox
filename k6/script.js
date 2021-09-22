@@ -14,8 +14,7 @@ export default function () {
   http.get('http://35.226.45.191/fast');
   http.get('http://35.226.45.191/fast');
   http.get('http://35.226.45.191/fast');
-  http.get('http://35.226.45.191/roulette');
-  http.get('http://35.226.45.191/roulette');
+  http.get('http://35.226.45.191/roulette/300');
   http.get('http://35.226.45.191/slow');
   http.get('http://35.226.45.191/trip/3');
 }
