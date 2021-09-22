@@ -28,9 +28,10 @@ class SimpleRestController {
   RestTemplate restTemplate;
 
   @GetMapping("/fast")
-  String fast() {
-    String mockResult = "Freaky fast method call that does nothing";
+  String fast() throws InterruptedException {
+    String mockResult = "Fast method call that does nothing";
     logger.info(mockResult);
+    TimeUnit.MILLISECONDS.sleep(100);
     return mockResult;
   }
 
@@ -38,7 +39,7 @@ class SimpleRestController {
   String slow() throws InterruptedException{
     Random random = new Random();
     int nbr = random.nextInt(2) + 1;
-    logger.info(String.format("About to go to sleep for %d second", nbr));
+    logger.info(String.format("About to go to sleep for %d seconds", nbr));
     TimeUnit.SECONDS.sleep(nbr);
     logger.info("Woke up after a brief nap");
 
@@ -47,21 +48,22 @@ class SimpleRestController {
 
   @GetMapping("/roulette")
   String roulette() {
-    String response = "You have a 1 in 100 chance of NOT getting this message.";
+    String response = "You have a 1 in 1000 chance of NOT getting this message.";
     Random random = new Random();
-    int nbr = random.nextInt(100) + 1;
-    try {
-        if (nbr == 100) {
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        logger.info(response);
-        return response;
+    int nbr = random.nextInt(1000) + 1;
+
+    if (nbr == 1000) {
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    catch (Exception e){
-        logger.error(e.getMessage(), e);
-        return e.getMessage();
-    }
+    logger.info(response);
+    return response;
+  }
+
+  @GetMapping("/terminate")
+  String terminate() {
+    logger.error("Who told you to do that?");
+    System.exit(-1);
+    return "you will never see this response. i've been terminated";
   }
 
   @GetMapping("/trip/{count}")
@@ -81,9 +83,10 @@ class SimpleRestController {
     return mockResult;
   }
 
-  @ExceptionHandler(InterruptedException.class)
-  public String error() {
-    return "unknown error";
+  @ExceptionHandler({InterruptedException.class, ResponseStatusException.class})
+  public String error(Exception e) throws Exception {
+    logger.error(e.getMessage(), e);
+    throw e;
   }
 
   @Bean
