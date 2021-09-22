@@ -26,7 +26,6 @@ grafana-server web
 ### Spring Boot Sample 
 ```
 cd spring-node
-./mvnw clean package
 ./mvnw spring-boot:run
 ```
 
@@ -45,13 +44,8 @@ cd spring-node
 
 ### Spring Boot on k8s
 ```
-./mvnw clean package
-./mvnw spring-boot:build-image
-docker tag demo:0.0.1-SNAPSHOT williamsjt/spring-node:latest
-docker push williamsjt/spring-node:latest
-kubectl apply -f ./spring-node/deployment.yaml
-kubectl rollout restart deployment spring-node
-kubectl get service spring-node -w 
+cd spring-node
+./deploy.sh
 ```
 
 * local - spring boot app prometheus endpoint http://localhost:8082/actuator/prometheus

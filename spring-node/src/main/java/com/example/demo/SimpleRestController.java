@@ -28,17 +28,16 @@ class SimpleRestController {
   RestTemplate restTemplate;
 
   @GetMapping("/fast")
-  String fast() throws InterruptedException {
+  String fast()  {
     String mockResult = "Fast method call that does nothing";
     logger.info(mockResult);
-    TimeUnit.MILLISECONDS.sleep(100);
     return mockResult;
   }
 
   @GetMapping("/slow")
   String slow() throws InterruptedException{
     Random random = new Random();
-    int nbr = random.nextInt(2) + 1;
+    int nbr = random.nextInt(1) + 1;
     logger.info(String.format("About to go to sleep for %d seconds", nbr));
     TimeUnit.SECONDS.sleep(nbr);
     logger.info("Woke up after a brief nap");
@@ -48,9 +47,9 @@ class SimpleRestController {
 
   @GetMapping("/roulette")
   String roulette() {
-    String response = "You have a 1 in 1000 chance of NOT getting this message.";
+    String response = "You have a 1 in 100 chance of NOT getting this message.";
     Random random = new Random();
-    int nbr = random.nextInt(1000) + 1;
+    int nbr = random.nextInt(100) + 1;
 
     if (nbr == 1000) {
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
