@@ -1,4 +1,78 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_GRAFANACLOUD-JAMESWILLIAMS1-PROM",
+      "label": "grafanacloud-jameswilliams1-prom",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    },
+    {
+      "name": "DS_GRAFANACLOUD-JAMESWILLIAMS1-LOGS",
+      "label": "grafanacloud-jameswilliams1-logs",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "loki",
+      "pluginName": "Loki"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "panel",
+      "id": "alertlist",
+      "name": "Alert list",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "bargauge",
+      "name": "Bar gauge",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "8.1.4"
+    },
+    {
+      "type": "datasource",
+      "id": "loki",
+      "name": "Loki",
+      "version": "1.0.0"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "text",
+      "name": "Text",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -17,7 +91,7 @@
         "type": "dashboard"
       },
       {
-        "datasource": "grafanacloud-jameswilliams1-logs",
+        "datasource": "${DS_GRAFANACLOUD-JAMESWILLIAMS1-LOGS}",
         "enable": true,
         "expr": "{app=\"spring-node\",container=\"spring-node\"} |= \"log_level=ERROR\"",
         "iconColor": "red",
@@ -31,24 +105,39 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 18,
-  "iteration": 1630376909799,
-  "links": [],
+  "id": null,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": true,
+      "tags": [
+        "spring-node"
+      ],
+      "targetBlank": false,
+      "title": "Application Logs",
+      "tooltip": "",
+      "type": "dashboards",
+      "url": ""
+    }
+  ],
   "panels": [
     {
       "datasource": null,
+      "description": "",
       "gridPos": {
         "h": 3,
-        "w": 20,
+        "w": 24,
         "x": 0,
         "y": 0
       },
       "id": 2,
       "options": {
-        "content": "<table style=\"width:100%;height:100px;\">\n  <tr>\n    <td style=\"width:100px; border:1px solid black;\">\n      <img style=\"height:90px;width:90px;\" src=\"https://storage.googleapis.com/se_demo_images/spring-boot.png\"></img>\n    </td>\n    <td style=\"width:100px; border:1px solid black;\">\n      <img style=\"height:90px;width:90px;\" src=\"https://storage.googleapis.com/se_demo_images/k8s.png\"></img>\n    </td>\n    <td style=\"border:1px solid black;\">  \n        <h1>Cloud Native Forensics</h1>\n        <p>Metrics + Logs + Traces</p>\n    </td>\n  </tr>\n</table>\n",
+        "content": "<table style=\"width:100%;height:100px;border:0px;background-color:white\">\n  <tr>\n    <td style=\"width:100px; border:0px\">\n      <img style=\"height:90px;width:90px;\" src=\"https://storage.googleapis.com/se_demo_images/spring-boot.png\"></img>\n    </td>\n    <td style=\"width:100px; border:0px\">\n      <img style=\"height:60px;width:60px;\" src=\"https://storage.googleapis.com/se_demo_images/k8s.png\"></img>\n    </td>\n    <td style=\"border:0px;\">  \n        <h1>Cloud Native Forensics</h1>\n        <p>Metrics + Logs + Traces</p>\n    </td>\n  </tr>\n</table>\n",
         "mode": "html"
       },
-      "pluginVersion": "8.1.2",
+      "pluginVersion": "8.1.4",
       "targets": [
         {
           "metricQuery": {
@@ -76,7 +165,7 @@
       "type": "row"
     },
     {
-      "datasource": "grafanacloud-jameswilliams1-prom",
+      "datasource": "${DS_GRAFANACLOUD-JAMESWILLIAMS1-PROM}",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -95,12 +184,12 @@
               "tooltip": false,
               "viz": false
             },
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineStyle": {
               "fill": "solid"
             },
             "lineWidth": 1,
-            "pointSize": 5,
+            "pointSize": 1,
             "scaleDistribution": {
               "type": "linear"
             },
@@ -133,7 +222,7 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 12,
+        "w": 9,
         "x": 0,
         "y": 4
       },
@@ -151,7 +240,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum by (uri)(rate(http_server_requests_seconds_count{endpoint_name=\"spring-node\",status=\"200\",uri=~\"[[uri]]\"}[1m]))",
+          "expr": "sum by (uri)(rate(http_server_requests_seconds_count{endpoint_name=\"spring-node\",status=\"200\"}[1m]))",
           "instant": false,
           "interval": "",
           "intervalFactor": 1,
@@ -163,13 +252,45 @@
       "type": "timeseries"
     },
     {
-      "datasource": "grafanacloud-jameswilliams1-prom",
+      "datasource": null,
+      "gridPos": {
+        "h": 12,
+        "w": 9,
+        "x": 9,
+        "y": 4
+      },
+      "id": 20,
+      "options": {
+        "alertName": "",
+        "dashboardAlerts": true,
+        "dashboardTitle": "",
+        "folderId": null,
+        "maxItems": 10,
+        "showOptions": "changes",
+        "sortOrder": 1,
+        "stateFilter": {
+          "alerting": false,
+          "execution_error": false,
+          "no_data": false,
+          "ok": false,
+          "paused": false,
+          "pending": false
+        },
+        "tags": []
+      },
+      "pluginVersion": "8.1.4",
+      "title": "Application Alerts",
+      "type": "alertlist"
+    },
+    {
+      "datasource": "${DS_GRAFANACLOUD-JAMESWILLIAMS1-PROM}",
       "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
+          "decimals": 1,
           "mappings": [],
           "thresholds": {
             "mode": "percentage",
@@ -189,16 +310,14 @@
       },
       "gridPos": {
         "h": 12,
-        "w": 12,
-        "x": 12,
+        "w": 6,
+        "x": 18,
         "y": 4
       },
       "id": 5,
       "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
+        "displayMode": "gradient",
+        "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -206,14 +325,14 @@
           "fields": "",
           "values": false
         },
-        "text": {},
-        "textMode": "auto"
+        "showUnfilled": true,
+        "text": {}
       },
-      "pluginVersion": "8.1.2",
+      "pluginVersion": "8.1.4",
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum by (uri)(rate(http_server_requests_seconds_sum{endpoint_name=\"spring-node\",uri=~\"[[uri]]\"}[$__interval]))",
+          "expr": "sum by (uri)(rate(http_server_requests_seconds_sum{endpoint_name=\"spring-node\"}[5m])) > 1",
           "instant": false,
           "interval": "",
           "intervalFactor": 1,
@@ -221,11 +340,48 @@
           "refId": "A"
         }
       ],
-      "title": "Response Time",
-      "type": "stat"
+      "title": "Response Time - Slow Endpoints",
+      "transformations": [],
+      "type": "bargauge"
     },
     {
-      "datasource": "grafanacloud-jameswilliams1-prom",
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                1
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "5m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "5m",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "Error Rate Per Second is too high.",
+        "name": "Error Rate Per Minute Alert",
+        "noDataState": "no_data",
+        "notifications": []
+      },
+      "datasource": "${DS_GRAFANACLOUD-JAMESWILLIAMS1-PROM}",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -237,7 +393,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 10,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -246,7 +402,7 @@
             },
             "lineInterpolation": "linear",
             "lineWidth": 1,
-            "pointSize": 5,
+            "pointSize": 1,
             "scaleDistribution": {
               "type": "linear"
             },
@@ -260,9 +416,183 @@
               "mode": "area"
             }
           },
+          "decimals": 1,
+          "links": [
+            {
+              "title": "Logs",
+              "url": "https://jameswilliams1.grafana.net/d/spUXtHHnk/cloud-native-forensics-copy"
+            }
+          ],
           "mappings": [],
           "thresholds": {
-            "mode": "percentage",
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "super-light-blue",
+                "value": null
+              },
+              {
+                "color": "dark-blue",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "/roulette/{odds} "
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 9,
+        "x": 0,
+        "y": 10
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.1.4",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum by (uri)(rate(http_server_requests_seconds_count{endpoint_name=\"spring-node\",status!=\"200\"}[1m])) * 60",
+          "instant": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "{{uri}} ",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "op": "gt",
+          "value": 1,
+          "visible": true
+        }
+      ],
+      "title": "Error Rate Per Minute",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      },
+      "id": 12,
+      "panels": [],
+      "title": "Infrastructure",
+      "type": "row"
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                10
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "5m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "5m",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "High System Load Warning",
+        "name": "System Load Average alert",
+        "noDataState": "no_data",
+        "notifications": []
+      },
+      "datasource": "${DS_GRAFANACLOUD-JAMESWILLIAMS1-PROM}",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
             "steps": [
               {
                 "color": "green",
@@ -281,9 +611,9 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 10
+        "y": 17
       },
-      "id": 8,
+      "id": 14,
       "options": {
         "legend": {
           "calcs": [],
@@ -294,188 +624,30 @@
           "mode": "single"
         }
       },
-      "pluginVersion": "8.1.2",
+      "pluginVersion": "8.1.4",
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum by (uri)(rate(http_server_requests_seconds_count{endpoint_name=\"spring-node\",status!=\"200\",uri=~\"[[uri]]\"}[1m]))",
-          "instant": false,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "{{uri}} ",
-          "refId": "A"
-        }
-      ],
-      "title": "Error Rate Per Second",
-      "type": "timeseries"
-    },
-    {
-      "datasource": "grafanacloud-jameswilliams1-logs",
-      "gridPos": {
-        "h": 10,
-        "w": 24,
-        "x": 0,
-        "y": 16
-      },
-      "id": 7,
-      "options": {
-        "dedupStrategy": "none",
-        "enableLogDetails": true,
-        "prettifyLogMessage": false,
-        "showCommonLabels": false,
-        "showLabels": false,
-        "showTime": false,
-        "sortOrder": "Descending",
-        "wrapLogMessage": true
-      },
-      "targets": [
-        {
-          "expr": "{app=\"spring-node\",container=\"spring-node\"} |~ `$uri`",
-          "instant": false,
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Application Logs",
-      "transformations": [],
-      "type": "logs"
-    },
-    {
-      "collapsed": false,
-      "datasource": null,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 26
-      },
-      "id": 12,
-      "panels": [],
-      "title": "Infrastructure",
-      "type": "row"
-    },
-    {
-      "datasource": "grafanacloud-jameswilliams1-prom",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 7,
-        "x": 0,
-        "y": 27
-      },
-      "id": 14,
-      "options": {
-        "displayMode": "gradient",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showUnfilled": true,
-        "text": {
-          "titleSize": 15,
-          "valueSize": 15
-        }
-      },
-      "pluginVersion": "8.1.2",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "system_load_average_1m{endpoint_name=\"spring-node\"}",
+          "expr": "system_load_average_1m{endpoint_name=\"spring-node\"} ",
           "interval": "",
           "intervalFactor": 10,
           "legendFormat": "{{instance}}",
           "refId": "A"
         }
       ],
-      "title": "System Load Average",
-      "type": "bargauge"
-    },
-    {
-      "datasource": "grafanacloud-jameswilliams1-prom",
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 7,
-        "y": 27
-      },
-      "id": 16,
-      "options": {
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "text": {}
-      },
-      "pluginVersion": "8.1.2",
-      "targets": [
+      "thresholds": [
         {
-          "exemplar": true,
-          "expr": "jvm_threads_live_threads{endpoint_name=\"spring-node\",job=\"integrations/spring-boot\"}",
-          "instant": false,
-          "interval": "",
-          "intervalFactor": 10,
-          "legendFormat": "{{instance}} ",
-          "refId": "A"
+          "colorMode": "critical",
+          "op": "gt",
+          "value": 10,
+          "visible": true
         }
       ],
-      "title": "JVM Live Threads",
-      "type": "gauge"
+      "title": "System Load Average",
+      "type": "timeseries"
     },
     {
-      "datasource": "grafanacloud-jameswilliams1-prom",
+      "datasource": "${DS_GRAFANACLOUD-JAMESWILLIAMS1-PROM}",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -486,16 +658,16 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 20,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 1,
-            "pointSize": 5,
+            "pointSize": 1,
             "scaleDistribution": {
               "type": "linear"
             },
@@ -527,10 +699,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 9,
-        "x": 15,
-        "y": 27
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 17
       },
       "id": 18,
       "options": {
@@ -555,46 +727,136 @@
       ],
       "title": "Garbage Collection",
       "type": "timeseries"
+    },
+    {
+      "datasource": "${DS_GRAFANACLOUD-JAMESWILLIAMS1-PROM}",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 0,
+        "y": 23
+      },
+      "id": 21,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.1.4",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum by (instance)(rate(container_network_transmit_bytes_total{}[1m])) / 1024 / 1024",
+          "interval": "",
+          "intervalFactor": 10,
+          "legendFormat": "{{instance}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Network Throughput - MB",
+      "type": "stat"
+    },
+    {
+      "datasource": "${DS_GRAFANACLOUD-JAMESWILLIAMS1-PROM}",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 12,
+        "y": 23
+      },
+      "id": 16,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "8.1.4",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "jvm_threads_live_threads{endpoint_name=\"spring-node\",job=\"integrations/spring-boot\"}",
+          "instant": false,
+          "interval": "",
+          "intervalFactor": 10,
+          "legendFormat": "{{instance}} ",
+          "refId": "A"
+        }
+      ],
+      "title": "JVM Live Threads",
+      "type": "gauge"
     }
   ],
   "refresh": "5s",
   "schemaVersion": 30,
   "style": "dark",
-  "tags": [],
+  "tags": [
+    "spring-node"
+  ],
   "templating": {
-    "list": [
-      {
-        "allValue": "",
-        "current": {
-          "selected": false,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
-        },
-        "datasource": "grafanacloud-jameswilliams1-prom",
-        "definition": "{job=\"integrations/spring-boot\"}",
-        "description": null,
-        "error": null,
-        "hide": 0,
-        "includeAll": true,
-        "label": "Spring Boot Endpoints",
-        "multi": true,
-        "name": "uri",
-        "options": [],
-        "query": {
-          "query": "{job=\"integrations/spring-boot\"}",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 1,
-        "regex": "/.*uri=\"([^\"]*).*/",
-        "skipUrlSync": false,
-        "sort": 1,
-        "type": "query"
-      }
-    ]
+    "list": []
   },
   "time": {
     "from": "now-5m",
@@ -604,5 +866,5 @@
   "timezone": "",
   "title": "Cloud Native Forensics",
   "uid": "dt42AVVnk",
-  "version": 77
+  "version": 145
 }

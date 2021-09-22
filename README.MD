@@ -48,6 +48,11 @@ cd spring-node
 ./deploy.sh
 ```
 
+### Scale k8s replicas - Spring Boot
+```
+kubectl scale deployment spring-node --replicas=6
+```
+
 * local - spring boot app prometheus endpoint http://localhost:8082/actuator/prometheus
 * local - spring boot app prometheus endpoint http://localhost:8082/fast and http://localhost:8082/slow
 * k8s - spring boot app endpoint http://EXTERNAL-IP/fast and http://EXTERNAL-IP/slow
