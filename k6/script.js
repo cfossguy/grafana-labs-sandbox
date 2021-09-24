@@ -10,11 +10,10 @@ export let options = {
 };
 
 export default function () {
-  http.get('http://35.226.45.191/fast');
-  http.get('http://35.226.45.191/fast');
-  http.get('http://35.226.45.191/fast');
-  http.get('http://35.226.45.191/fast');
+  http.get('http://35.226.45.191/fast/10');
+  http.get('http://35.226.45.191/fast/100');
+  http.get('http://35.226.45.191/fast/1000');
   http.get('http://35.226.45.191/roulette/300');
-  http.get('http://35.226.45.191/slow');
+  http.get('http://35.226.45.191/slow/5000');
   http.get('http://35.226.45.191/trip/3');
 }

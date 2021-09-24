@@ -27,22 +27,33 @@ class SimpleRestController {
   @Autowired
   RestTemplate restTemplate;
 
-  @GetMapping("/fast")
-  String fast()  {
-    String mockResult = "Fast method call that does nothing";
+  @GetMapping("/fast/{s}")
+  String fast(@PathVariable("s") int s)  throws InterruptedException{
+    String mockResult = "Fast method call that returns a random length string: ";
+    Random random = new Random();
+
+    int nbr = random.nextInt(s) + 1;
     logger.info(mockResult);
+    for(int i=0; i<nbr; i++) {
+        mockResult = mockResult + "LOL!";
+    }
     return mockResult;
   }
 
-  @GetMapping("/slow")
-  String slow() throws InterruptedException{
+  @GetMapping("/slow/{s}")
+  String slow(@PathVariable("s") int s) throws InterruptedException{
+    String mockResult = "Slow method call that returns a random length string: ";
     Random random = new Random();
-    int nbr = random.nextInt(1) + 1;
-    logger.info(String.format("About to go to sleep for %d seconds", nbr));
-    TimeUnit.SECONDS.sleep(nbr);
+    int nbr = random.nextInt(s) + 1;
+    logger.info("About to go to sleep for .5 seconds");
+    TimeUnit.MILLISECONDS.sleep(200);
     logger.info("Woke up after a brief nap");
 
-    return String.format("About to go to sleep for %d second", nbr);
+    for(int i=0; i<nbr; i++) {
+        mockResult = mockResult + "LOL!";
+    }
+
+    return mockResult;
   }
 
   @GetMapping("/roulette/{odds}")
@@ -55,7 +66,7 @@ class SimpleRestController {
         TimeUnit.SECONDS.sleep(1);
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    logger.info(response);
+    logger.warn(response);
     return response;
   }
 
