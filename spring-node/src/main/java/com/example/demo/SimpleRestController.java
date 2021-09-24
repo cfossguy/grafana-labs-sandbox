@@ -29,10 +29,10 @@ class SimpleRestController {
 
   @GetMapping("/fast/{s}")
   String fast(@PathVariable("s") int s)  throws InterruptedException{
-    String mockResult = "Fast method call that returns a random length string: ";
+    String mockResult = "Fast method call that returns a random length string";
     Random random = new Random();
 
-    int nbr = random.nextInt(s) + 1;
+    int nbr = (random.nextInt(s) + 1) * 100;
     logger.info(mockResult);
     for(int i=0; i<nbr; i++) {
         mockResult = mockResult + "LOL!";
@@ -42,11 +42,11 @@ class SimpleRestController {
 
   @GetMapping("/slow/{s}")
   String slow(@PathVariable("s") int s) throws InterruptedException{
-    String mockResult = "Slow method call that returns a random length string: ";
+    String mockResult = "Slow method call that returns a random length string";
     Random random = new Random();
-    int nbr = random.nextInt(s) + 1;
-    logger.info("About to go to sleep for .5 seconds");
-    TimeUnit.MILLISECONDS.sleep(200);
+    int nbr = (random.nextInt(s) + 1) * 100;
+    logger.info(String.format("About to go to sleep for %d seconds"), nbr);
+    TimeUnit.MILLISECONDS.sleep(nbr);
     logger.info("Woke up after a brief nap");
 
     for(int i=0; i<nbr; i++) {
@@ -58,7 +58,7 @@ class SimpleRestController {
 
   @GetMapping("/roulette/{odds}")
   String roulette(@PathVariable("odds") int odds) throws InterruptedException {
-    String response = String.format("You have a 1 in %d chance of NOT getting this message.", odds);
+    String response = String.format("You have a 1 in %d chance of NOT getting this message", odds);
     Random random = new Random();
     int nbr = random.nextInt(odds) + 1;
 
@@ -79,19 +79,18 @@ class SimpleRestController {
 
   @GetMapping("/trip/{count}")
   String trip(@PathVariable("count") int count) {
-    String slowSvcUrl = "http://localhost:" + serverPort + "/slow";
-    String fastSvcUrl = "http://localhost:" + serverPort + "/fast";
-
+    String slowSvcUrl = "http://localhost:" + serverPort + "/slow/5000";
+    String fastSvcUrl = "http://localhost:" + serverPort + "/fast/1000";
+    String response = "";
     for(int i=0; i<count; i++) {
-      String response = restTemplate.getForObject(slowSvcUrl, String.class );
-      logger.info(String.format("Microservice response: %s", response));
+      response = restTemplate.getForObject(slowSvcUrl, String.class );
+      logger.info("Making call to the slow endpoint");
 
-      response = restTemplate.getForObject(fastSvcUrl, String.class );
-      logger.info(String.format("Microservice response: %s", response));
+      response = response + restTemplate.getForObject(fastSvcUrl, String.class );
+      logger.info("Making call to the fast endpoint");
     }
-    String mockResult = String.format("%d round trips to multiple services", count);
-    logger.info(mockResult);
-    return mockResult;
+    logger.info(String.format("%d round trips to fast and slow services", count));
+    return response;
   }
 
   @ExceptionHandler({InterruptedException.class, ResponseStatusException.class})
