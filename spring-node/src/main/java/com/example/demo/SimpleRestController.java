@@ -45,7 +45,7 @@ class SimpleRestController {
     String mockResult = "Slow method call that returns a random length string";
     Random random = new Random();
     int nbr = (random.nextInt(s) + 1) * 100;
-    logger.info(String.format("About to go to sleep for %d seconds"), nbr);
+    logger.info("About to go to sleep for a bit");
     TimeUnit.MILLISECONDS.sleep(nbr);
     logger.info("Woke up after a brief nap");
 
@@ -79,8 +79,8 @@ class SimpleRestController {
 
   @GetMapping("/trip/{count}")
   String trip(@PathVariable("count") int count) {
-    String slowSvcUrl = "http://localhost:" + serverPort + "/slow/5000";
-    String fastSvcUrl = "http://localhost:" + serverPort + "/fast/1000";
+    String slowSvcUrl = "http://localhost:" + serverPort + "/slow/2";
+    String fastSvcUrl = "http://localhost:" + serverPort + "/fast/1";
     String response = "";
     for(int i=0; i<count; i++) {
       response = restTemplate.getForObject(slowSvcUrl, String.class );
