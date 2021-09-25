@@ -45,7 +45,7 @@ class SimpleRestController {
     String mockResult = "Slow method call that returns a random length string";
     Random random = new Random();
     int nbr = (random.nextInt(s) + 1) * 100;
-    logger.info("About to go to sleep for a bit");
+    logger.warn("About to go to sleep for a bit");
     TimeUnit.MILLISECONDS.sleep(nbr);
     logger.info("Woke up after a brief nap");
 
@@ -89,7 +89,7 @@ class SimpleRestController {
       response = response + restTemplate.getForObject(fastSvcUrl, String.class );
       logger.info("Making call to the fast endpoint");
     }
-    logger.info(String.format("%d round trips to fast and slow services", count));
+    logger.warn(String.format("%d round trips to fast and slow services", count));
     return response;
   }
 
