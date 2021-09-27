@@ -58,6 +58,7 @@ class SimpleRestController {
 
   @GetMapping("/roulette/{odds}")
   String roulette(@PathVariable("odds") int odds) throws InterruptedException {
+    odds = odds * 1000;
     String response = String.format("You have a 1 in %d chance of NOT getting this message", odds);
     Random random = new Random();
     int nbr = random.nextInt(odds) + 1;
