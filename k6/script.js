@@ -23,9 +23,9 @@ export default function () {
   http.get('http://35.226.45.191/roulette/3');
   http.get('http://35.226.45.191/roulette/10');
 
-  // 1 slow call with large(3) response payload, will have large(3) sleep time
+  // 1 slow call with medium(2) response payload, will have medium(2) sleep time
   // 1 slow call with small(1) response payload, will have small(1) sleep time
-  http.get('http://35.226.45.191/slow/3');
+  http.get('http://35.226.45.191/slow/2');
   http.get('http://35.226.45.191/slow/1');
 
   // 1 round trip call with large(3) response payload
