@@ -44,7 +44,7 @@ class SimpleRestController {
   String slow(@PathVariable("s") int s) throws InterruptedException{
     String mockResult = "Slow method call that returns a random length string";
     Random random = new Random();
-    int nbr = (random.nextInt(s) + 1) * 100;
+    int nbr = (random.nextInt(s) + 1) * 10;
     logger.warn("About to go to sleep for a bit");
     TimeUnit.MILLISECONDS.sleep(nbr);
     logger.info("Woke up after a brief nap");
