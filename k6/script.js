@@ -19,16 +19,15 @@ export default function () {
   http.get('http://35.226.45.191/fast/1');
   http.get('http://35.226.45.191/fast/2');
 
-  // 1 roulette call with large(3) response payload, will fail 1 out of 3000
-  // 1 roulette call with ex-large(10) response payload, will fail 1 out of 10000
-  http.get('http://35.226.45.191/roulette/3');
-  http.get('http://35.226.45.191/roulette/10');
+  // 3 roulette calls will fail 1 out of 5000
+  http.get('http://35.226.45.191/roulette/5000');
+  http.get('http://35.226.45.191/roulette/5000');
+  http.get('http://35.226.45.191/roulette/5000');
 
-  // 1 slow call with medium(2) response payload, will have medium(2) sleep time
-  // 1 slow call with small(1) response payload, will have small(1) sleep time
+  // 2 slow calls with 2 second sleep times
   http.get('http://35.226.45.191/slow/2');
-  http.get('http://35.226.45.191/slow/1');
+  http.get('http://35.226.45.191/slow/2');
 
-  // 1 round trip call with large(3) response payload
+  // 1 round trip call with 3 second sleep time
   http.get('http://35.226.45.191/trip/3');
 }

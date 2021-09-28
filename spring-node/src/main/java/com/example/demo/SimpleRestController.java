@@ -28,47 +28,29 @@ class SimpleRestController {
   RestTemplate restTemplate;
 
   @GetMapping("/fast/{s}")
-  String fast(@PathVariable("s") int s)  throws InterruptedException{
-    String mockResult = "Fast method call that returns a random length string";
-    Random random = new Random();
-
-    int nbr = (random.nextInt(s) + 1) * 100;
-    logger.info(mockResult);
-    for(int i=0; i<nbr; i++) {
-        mockResult = mockResult + "LOL!";
-    }
-    return mockResult;
+  String fast(@PathVariable("s") int s) {
+    logger.info("Fast method call that returns a fixed length string");
+    return getMockResponse(s);
   }
 
   @GetMapping("/slow/{s}")
-  String slow(@PathVariable("s") int s) throws InterruptedException{
-    String mockResult = "Slow method call that returns a random length string";
-    Random random = new Random();
-    int nbr = (random.nextInt(s) + 1) * 100;
+  String slow(@PathVariable("s") int s) {
     logger.warn("About to go to sleep for a bit");
-    TimeUnit.MILLISECONDS.sleep(s * 100);
+    TimeUnit.SECONDS.sleep(s);
     logger.info("Woke up after a brief nap");
-
-    for(int i=0; i<nbr; i++) {
-        mockResult = mockResult + "LOL!";
-    }
-
-    return mockResult;
+    return getMockResponse(s);
   }
 
   @GetMapping("/roulette/{odds}")
   String roulette(@PathVariable("odds") int odds) throws InterruptedException {
-    odds = odds * 1000;
-    String response = String.format("You have a 1 in %d chance of NOT getting this message", odds);
     Random random = new Random();
     int nbr = random.nextInt(odds) + 1;
-
     if (nbr == odds) {
         TimeUnit.SECONDS.sleep(1);
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    logger.warn(response);
-    return response;
+    logger.warn(String.format("You have a 1 in %d chance of NOT getting this message", odds));
+    return getMockResponse(s);
   }
 
   @GetMapping("/terminate")
@@ -80,8 +62,8 @@ class SimpleRestController {
 
   @GetMapping("/trip/{count}")
   String trip(@PathVariable("count") int count) {
-    String slowSvcUrl = "http://localhost:" + serverPort + "/slow/3";
-    String fastSvcUrl = "http://localhost:" + serverPort + "/fast/3";
+    String slowSvcUrl = String.format("http://localhost:%d/slow/%d", serverPort, odds);
+    String fastSvcUrl = String.format("http://localhost:%d/fast/%d", serverPort, odds);
     String response = "";
     for(int i=0; i<count; i++) {
       response = restTemplate.getForObject(slowSvcUrl, String.class );
@@ -91,6 +73,17 @@ class SimpleRestController {
       logger.info("Making call to the fast endpoint");
     }
     logger.warn(String.format("%d round trips to fast and slow services", count));
+    return response;
+  }
+
+  private String getMockResponse(int kbSize) {
+    String response = "";
+    int kbSize = s * 10000;
+
+    for(int i=0; i<kbSize; i++) {
+        response = response + "!";
+    }
+
     return response;
   }
 
