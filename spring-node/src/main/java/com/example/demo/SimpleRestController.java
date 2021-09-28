@@ -34,7 +34,7 @@ class SimpleRestController {
   }
 
   @GetMapping("/slow/{s}")
-  String slow(@PathVariable("s") int s) {
+  String slow(@PathVariable("s") int s) throws InterruptedException {
     logger.warn("About to go to sleep for a bit");
     TimeUnit.SECONDS.sleep(s);
     logger.info("Woke up after a brief nap");
@@ -50,7 +50,7 @@ class SimpleRestController {
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
     }
     logger.warn(String.format("You have a 1 in %d chance of NOT getting this message", odds));
-    return getMockResponse(s);
+    return getMockResponse(1);
   }
 
   @GetMapping("/terminate")
@@ -62,8 +62,8 @@ class SimpleRestController {
 
   @GetMapping("/trip/{count}")
   String trip(@PathVariable("count") int count) {
-    String slowSvcUrl = String.format("http://localhost:%d/slow/%d", serverPort, odds);
-    String fastSvcUrl = String.format("http://localhost:%d/fast/%d", serverPort, odds);
+    String slowSvcUrl = String.format("http://localhost:%d/slow/%d", serverPort, count);
+    String fastSvcUrl = String.format("http://localhost:%d/fast/%d", serverPort, count);
     String response = "";
     for(int i=0; i<count; i++) {
       response = restTemplate.getForObject(slowSvcUrl, String.class );
@@ -76,12 +76,14 @@ class SimpleRestController {
     return response;
   }
 
-  private String getMockResponse(int kbSize) {
+  private String getMockResponse(int s) {
     String response = "";
     int kbSize = s * 10000;
 
     for(int i=0; i<kbSize; i++) {
-        response = response + "!";
+        if (i % 100 == 0)
+            response += "\n";
+        response += "!";
     }
 
     return response;
