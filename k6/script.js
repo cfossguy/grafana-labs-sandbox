@@ -13,21 +13,21 @@ export let options = {
 };
 
 export default function () {
-  // 4 fast calls with small(1)/med(2) response payloads
-  http.get('http://35.226.45.191/fast/1');
-  http.get('http://35.226.45.191/fast/2');
-  http.get('http://35.226.45.191/fast/1');
-  http.get('http://35.226.45.191/fast/2');
+  // 4 fast calls with 10kb and 20kb response payloads
+  http.get('http://35.226.45.191/fast/10');
+  http.get('http://35.226.45.191/fast/20');
+  http.get('http://35.226.45.191/fast/10');
+  http.get('http://35.226.45.191/fast/20');
 
-  // 3 roulette calls will fail 1 out of 5000
-  http.get('http://35.226.45.191/roulette/5000');
-  http.get('http://35.226.45.191/roulette/5000');
-  http.get('http://35.226.45.191/roulette/5000');
+  // 3 roulette calls will fail 1 out of 1000
+  http.get('http://35.226.45.191/roulette/1000');
+  http.get('http://35.226.45.191/roulette/1000');
+  http.get('http://35.226.45.191/roulette/1000');
 
-  // 2 slow calls with 2 second sleep times
-  http.get('http://35.226.45.191/slow/2');
-  http.get('http://35.226.45.191/slow/2');
+  // 2 slow calls with 2 second sleep times and 50kb response payloads
+  http.get('http://35.226.45.191/slow/2/50');
+  http.get('http://35.226.45.191/slow/2/50');
 
   // 1 round trip call with 3 second sleep time
-  http.get('http://35.226.45.191/trip/3');
+  http.get('http://35.226.45.191/trip/3/2/10');
 }

@@ -27,18 +27,18 @@ class SimpleRestController {
   @Autowired
   RestTemplate restTemplate;
 
-  @GetMapping("/fast/{s}")
-  String fast(@PathVariable("s") int s) {
+  @GetMapping("/fast/{kbsize}")
+  String fast(@PathVariable("kbsize") int kbsize) {
     logger.info("Fast method call that returns a fixed length string");
-    return getMockResponse(s);
+    return getMockResponse(kbsize);
   }
 
-  @GetMapping("/slow/{s}")
-  String slow(@PathVariable("s") int s) throws InterruptedException {
+  @GetMapping("/slow/{sleeptime}/{kbsize}")
+  String slow(@PathVariable("sleeptime") int sleepTime, @PathVariable("kbsize") int kbSize) throws InterruptedException {
     logger.warn("About to go to sleep for a bit");
-    TimeUnit.SECONDS.sleep(s);
+    TimeUnit.SECONDS.sleep(sleepTime);
     logger.info("Woke up after a brief nap");
-    return getMockResponse(s);
+    return getMockResponse(kbSize);
   }
 
   @GetMapping("/roulette/{odds}")
@@ -60,10 +60,10 @@ class SimpleRestController {
     return "you will never see this response. i've been terminated";
   }
 
-  @GetMapping("/trip/{count}")
-  String trip(@PathVariable("count") int count) {
-    String slowSvcUrl = String.format("http://localhost:%d/slow/%d", serverPort, count);
-    String fastSvcUrl = String.format("http://localhost:%d/fast/%d", serverPort, count);
+  @GetMapping("/trip/{count}/{sleeptime}/{kbsize}")
+  String trip(@PathVariable("count") int count, @PathVariable("sleeptime") int sleepTime, @PathVariable("kbsize") int kbSize) {
+    String slowSvcUrl = String.format("http://localhost:%s/slow/%d/%d", serverPort, sleepTime, kbSize);
+    String fastSvcUrl = String.format("http://localhost:%s/fast/%d", serverPort, kbSize);
     String response = "";
     for(int i=0; i<count; i++) {
       response = restTemplate.getForObject(slowSvcUrl, String.class );
@@ -78,7 +78,7 @@ class SimpleRestController {
 
   private String getMockResponse(int s) {
     String response = "";
-    int kbSize = s * 10000;
+    int kbSize = s * 1000;
 
     for(int i=0; i<kbSize; i++) {
         if (i % 100 == 0)
