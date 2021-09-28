@@ -46,7 +46,7 @@ class SimpleRestController {
     Random random = new Random();
     int nbr = (random.nextInt(s) + 1) * 100;
     logger.warn("About to go to sleep for a bit");
-    TimeUnit.MILLISECONDS.sleep(nbr);
+    TimeUnit.MILLISECONDS.sleep(s * 100);
     logger.info("Woke up after a brief nap");
 
     for(int i=0; i<nbr; i++) {
