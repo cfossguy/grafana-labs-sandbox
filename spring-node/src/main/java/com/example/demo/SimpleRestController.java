@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -27,26 +28,54 @@ class SimpleRestController {
   @Autowired
   RestTemplate restTemplate;
 
-  @GetMapping("/fast/{kbsize}")
-  String fast(@PathVariable("kbsize") int kbsize) {
+  @GetMapping("/fast/{k}")
+  String fast(@PathVariable("k") String k) {
+    int kbSize = 0;
+    try {
+        kbSize = Integer.parseInt(k);
+    }
+    catch (Exception e){
+         logger.error(String.format("Invalid API Request Parameter k=%s",k));
+         throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
+
     logger.info("Fast method call that returns a fixed length string");
-    return getMockResponse(kbsize);
+    return getMockResponse(kbSize);
   }
 
-  @GetMapping("/slow/{sleeptime}/{kbsize}")
-  String slow(@PathVariable("sleeptime") int sleepTime, @PathVariable("kbsize") int kbSize) throws InterruptedException {
+  @GetMapping("/slow/{s}/{k}")
+  String slow(@PathVariable("s") String s, @PathVariable("k") String k) throws InterruptedException {
+    int kbSize = 0;
+    int sleepTime = 0;
+    try {
+        kbSize = Integer.parseInt(k);
+        sleepTime = Integer.parseInt(s);
+    }
+    catch (Exception e){
+         logger.error(String.format("Invalid API Request Parameter k=%s, s=%s",k,s));
+         throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
+
     logger.warn("About to go to sleep for a bit");
     TimeUnit.SECONDS.sleep(sleepTime);
     logger.info("Woke up after a brief nap");
     return getMockResponse(kbSize);
   }
 
-  @GetMapping("/roulette/{odds}")
-  String roulette(@PathVariable("odds") int odds) throws InterruptedException {
+  @GetMapping("/roulette/{o}")
+  String roulette(@PathVariable("o") String o) throws InterruptedException {
+    int odds = 0;
+    try {
+        odds = Integer.parseInt(o);
+    }
+    catch (Exception e){
+         logger.error(String.format("Invalid API Request Parameter o=%s",o));
+         throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
+
     Random random = new Random();
     int nbr = random.nextInt(odds) + 1;
     if (nbr == odds) {
-        TimeUnit.SECONDS.sleep(1);
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
     }
     logger.warn(String.format("You have a 1 in %d chance of NOT getting this message", odds));
@@ -60,8 +89,23 @@ class SimpleRestController {
     return "you will never see this response. i've been terminated";
   }
 
-  @GetMapping("/trip/{count}/{sleeptime}/{kbsize}")
-  String trip(@PathVariable("count") int count, @PathVariable("sleeptime") int sleepTime, @PathVariable("kbsize") int kbSize) {
+  @GetMapping("/trip/{c}/{s}/{k}")
+  String trip(@PathVariable("c") String c, @PathVariable("s") String s, @PathVariable("k") String k) {
+
+    int count = 0;
+    int kbSize = 0;
+    int sleepTime = 0;
+
+    try {
+        count = Integer.parseInt(c);
+        kbSize = Integer.parseInt(k);
+        sleepTime = Integer.parseInt(s);
+    }
+    catch (Exception e){
+         logger.error(String.format("Invalid API Request Parameter c=%s,s=%s,k=%s",c,s,k));
+         throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
+
     String slowSvcUrl = String.format("http://localhost:%s/slow/%d/%d", serverPort, sleepTime, kbSize);
     String fastSvcUrl = String.format("http://localhost:%s/fast/%d", serverPort, kbSize);
     String response = "";
@@ -89,10 +133,16 @@ class SimpleRestController {
     return response;
   }
 
-  @ExceptionHandler({InterruptedException.class, ResponseStatusException.class})
-  public String error(Exception e) throws Exception {
+  @ExceptionHandler({InterruptedException.class})
+  public String error(Exception e) throws ResponseStatusException {
     logger.error(e.getMessage(), e);
-    throw e;
+    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  @ExceptionHandler({MethodArgumentTypeMismatchException.class})
+  public String errorInvalidInput(Exception e) throws ResponseStatusException {
+    logger.error(e.getMessage(), e);
+    throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
   }
 
   @Bean

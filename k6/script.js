@@ -29,5 +29,5 @@ export default function () {
   http.get('http://35.226.45.191/slow/2/50');
 
   // 1 round trip call with 3 second sleep time
-  http.get('http://35.226.45.191/trip/3/2/10');
+  http.get('http://35.226.45.191/trip/3/1/10');
 }
