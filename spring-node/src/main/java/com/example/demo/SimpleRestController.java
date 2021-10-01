@@ -83,10 +83,24 @@ class SimpleRestController {
   }
 
   @GetMapping("/terminate")
-  String terminate() {
-    logger.error("Who told you to do that?");
-    System.exit(-1);
-    return "you will never see this response. i've been terminated";
+  void terminate() {
+    logger.error("Who told you to do that? Something bad is going to happen");
+    int counter = 0;
+    String shining = "All work and no play makes Jack a dull boy\n";
+    try{
+        while (10 > 1){
+            shining += shining;
+            counter++;
+            logger.debug(shining);
+            logger.error(String.format("Cant stop, won't stop. Forever loop count=%d",counter));
+        }
+    }
+    catch (OutOfMemoryError o){
+       logger.error(o.getMessage(), o);
+    }
+    finally {
+        System.exit(-1);
+    }
   }
 
   @GetMapping("/trip/{c}/{s}/{k}")
