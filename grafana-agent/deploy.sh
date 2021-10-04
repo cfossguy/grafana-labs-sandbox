@@ -27,3 +27,6 @@ kubectl apply -f ./agent-traces.yaml -n grafana
 
 echo "INSTALLING TRACES AGENT CONFIGMAP (CONTAINS SECRETS)"
 kubectl apply -f ./_agent-tempo-config-map.yaml -n grafana
+
+echo "RESTARTING TRACES GRAFANA AGENT"
+kubectl rollout restart deployment grafana-agent-traces -n grafana

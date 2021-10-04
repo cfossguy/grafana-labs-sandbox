@@ -47,6 +47,21 @@ cd spring-node
 ./deploy.sh
 ```
 
+### Magic YAML Snippets
+#### prometheus scrape all spring-boot endpoints in k8s cluster
+```
+scrape_configs:
+  - job_name: integrations/spring-boot
+    metrics_path: /actuator/prometheus
+    kubernetes_sd_configs:
+      - role: endpoints
+    relabel_configs:
+      - source_labels: [ __meta_kubernetes_endpoints_name ]
+        target_label: endpoint_name
+        action: replace
+        replacement: $1
+```
+
 ### Scale k8s replicas - Spring Boot
 ```
 kubectl scale deployment spring-node --replicas=6
