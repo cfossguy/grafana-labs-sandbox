@@ -8,6 +8,6 @@ export let options = {
 };
 
 export default function () {
-  http.get('http://35.226.45.191/roulette/10')
-  http.get('http://35.226.45.191/fast/!!!');
+  http.get('http://34.133.2.247/roulette/10')
+  http.get('http://34.133.2.247/fast/!!!');
 }

@@ -1,7 +1,0 @@
-#@ load("_grafana-cloud-config.lib.yml", "agent_loki_yaml")
----
-kind: ConfigMap
-metadata:
-  name: grafana-agent-logs
-apiVersion: v1
-data: #@ agent_loki_yaml()

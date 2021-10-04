@@ -1,6 +1,18 @@
 # Command Line Snippets
 
-### Prerequisites
+### Easy Start - Grafana Cloud 
+1. Install "Kubernetes" - grafana agent (metrics) - https://grafana.com/docs/grafana-cloud/quickstart/agent-k8s/k8s_agent_metrics/
+2. Install "Kubernetes" - grafana loki agent (logs) - https://grafana.com/docs/grafana-cloud/quickstart/agent-k8s/k8s_agent_logs/
+3. Install "Kubernetes" - grafana tempo agent (traces) -https://grafana.com/docs/grafana-cloud/quickstart/agent-k8s/k8s_agent_traces/
+
+Wrapper script (requires _agent configmap yaml files for metrics/logs/traces agents) - files contain secrets 
+and are mostly copy/pasted from the Easy Start docs. Installing in a separate namespace called "grafana"
+```
+cd ./grafana-agent
+./deploy.sh
+```
+
+### Prerequisites - local setup
 1. YTT installed to manage YAML configuration templates
 2. Prometheus 2.x.x running locally and added to path
 3. OpenJDK to build example spring app
@@ -29,19 +41,6 @@ cd spring-node
 ./mvnw spring-boot:run
 ```
 
-### Grafana Agent k8s 
-1. Run ytt to inject secrets into configs
-2. Delete grafana agent deployment
-3. Delete grafana agent logs daemonset
-4. Apply grafana agent configmap
-5. Apply grafana agent logs configmap
-6. Deploy grafana agent deployment
-7. Deploy grafana agent logs daemonset
-8. Watch the pod create/runs
-```
-./install-agent.sh
-```
-
 ### Spring Boot on k8s
 ```
 cd spring-node
@@ -63,40 +62,10 @@ cd k6
 k6 run --vus 10 --duration 300s script.js
 ```
 
-### Magic YAML Snippets
-#### prometheus scrape all spring-boot endpoints in k8s cluster
+### k8s deploy of k6 scripts
 ```
-scrape_configs:
-  - job_name: integrations/spring-boot
-    metrics_path: /actuator/prometheus
-    kubernetes_sd_configs:
-      - role: endpoints
-    relabel_configs:
-      - source_labels: [ __meta_kubernetes_endpoints_name ]
-        target_label: endpoint_name
-        action: replace
-        replacement: $1
-```
-#### Grafana agent tweaks to capture node_exporter metrics (permissions/mounts)
-Refer to "spec" section in [grafana-agent/agent-bare.yml](./grafana-agent/agent-bare.yml). You also need 
-to tweak the "agent.yaml |" output to look like:
-
-```
-server:
-  http_listen_port: 12345
-integrations:
-  agent:
-    enabled: true
-  node_exporter:
-    enabled: true
-    rootfs_path: /host/root
-    sysfs_path: /host/sys
-    procfs_path: /host/proc
-  prometheus:
-    wal_directory: /tmp/grafana-agent-wal
-    global:
-      scrape_interval: 15s
-      remote_write:...
+cd k6
+./deploy.sh
 ```
 
 ### Install Node exporter directly on linux host
@@ -142,4 +111,4 @@ docker run -d --name graphite -p 80:80 -p 8080:8080 -p 2003-2004:2003-2004 -p 20
 4. URL: http://localhost:8080
 5. Save and Test
 6. Click on Dashboards tab (next to Settings tab)
-7.  Import Graphite Carbon Metrics dashboard
+7. Import Graphite Carbon Metrics dashboard
