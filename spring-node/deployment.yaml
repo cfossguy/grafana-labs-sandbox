@@ -17,7 +17,7 @@ spec:
         app: spring-node
     spec:
       containers:
-      - image: williamsjt/spring-node:latest
+      - image: us-central1-docker.pkg.dev/solutions-engineering-248511/se-jwilliams-sandbox/spring-node:latest
         imagePullPolicy: Always
         name: spring-node
         ports:

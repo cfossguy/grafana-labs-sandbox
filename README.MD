@@ -21,6 +21,7 @@ cd ./grafana-agent
 6. Grafana Cloud account to bounce metrics from local prometheus to the cloud
 7. kubectl installed and configured to use a k8s env with RBAC enabled
 8. Docker - for building the spring-node image
+9. Docker repository - for pulling spring-node image from container registry (demo uses GCP Artifact Registry)
 
 ### Prometheus
 ```
