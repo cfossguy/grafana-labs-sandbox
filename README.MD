@@ -1,16 +1,48 @@
 # Command Line Snippets
 
-### Easy Start - Grafana Cloud 
+### Easy Start - Grafana Cloud Agent
 1. Install "Kubernetes" - grafana agent (metrics) - https://grafana.com/docs/grafana-cloud/quickstart/agent-k8s/k8s_agent_metrics/
 2. Install "Kubernetes" - grafana loki agent (logs) - https://grafana.com/docs/grafana-cloud/quickstart/agent-k8s/k8s_agent_logs/
-3. Install "Kubernetes" - grafana tempo agent (traces) -https://grafana.com/docs/grafana-cloud/quickstart/agent-k8s/k8s_agent_traces/
+3. Install "Kubernetes" - grafana tempo agent (traces) - https://grafana.com/docs/grafana-cloud/quickstart/agent-k8s/k8s_agent_traces/
 
-Wrapper script (requires _agent configmap yaml files for metrics/logs/traces agents) - files contain secrets 
-and are mostly copy/pasted from the Easy Start docs. Installing in a separate namespace called "grafana"
+The Grafana Agent install is straightforward but it involves:
+1. Downloading bare deployment yaml files from github
+2. Copy/paste starter configmap files from grafana quickstart guides
+3. Replace config map variable placeholders with your environment info(username, password, remote_write...)
+
+### Super Easy Start - Grafana Cloud Agent
+You can do a "clean" metrics/logs/traces agent installation on k8s by setting environment variables 
+and doing a few find/replaces on the bare deployment files and config map files. This repo contains config map 
+files that were copy/pasted from the grafana quickstart guides as/is. 
+
+1. Create "./grafana-agent/.env" file and make sure the following properties are set
+```
+export YOUR_NAMESPACE=TODO
+
+#grafana metrics agent properties
+export YOUR_REMOTE_WRITE_URL=TODO
+export YOUR_REMOTE_WRITE_USERNAME=TODO
+export YOUR_REMOTE_WRITE_PASSWORD=TODO
+export YOUR_CLUSTER_NAME=TODO
+
+#grafana log agent properties
+export YOUR_LOKI_ENDPOINT=TODO
+export YOUR_LOKI_USERNAME=TODO
+export YOUR_LOKI_PASSWORD=TODO
+
+#grafana traces agent properties
+export TEMPO_USERNAME=TODO
+export TEMPO_PASSWORD=TODO
+```
+2. Source the environment variables into your shell session and run the wrapper deploy shell script. 
+This will create YAML files that can be applied to your k8s cluster. 
 ```
 cd ./grafana-agent
+source .env
 ./deploy.sh
+kubectl get pods -n $YOUR_NAMESPACE
 ```
+3. If you see grafana-agent and grafana-agent-logs and grafana-agent-traces pods running, and data in grafana, all is well.
 
 ### Prerequisites - local setup
 1. YTT installed to manage YAML configuration templates
