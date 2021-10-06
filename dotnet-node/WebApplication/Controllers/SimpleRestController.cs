@@ -1,15 +1,24 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace WebApplication.Controllers
 {
     [ApiController]
-    public class HelloWorldController : ControllerBase
+    public class SimpleRestController : ControllerBase
     {
-        [Route("HelloWorld")] 
-        [HttpGet] 
-        public string Index()
+        private readonly ILogger<SimpleRestController> _logger;
+
+        public SimpleRestController(ILogger<SimpleRestController> logger)
         {
-            return "This is my default action...";
+            _logger = logger;
+        }
+        
+        [Route("Fast")] 
+        [HttpGet] 
+        public string Fast(int k)
+        {
+            _logger.LogInformation("Fast method call that returns a fixed length string");
+            return getMockResponse(k);
         }
         
         [Route("HelloWorld/Welcome")] 
@@ -17,6 +26,19 @@ namespace WebApplication.Controllers
         public string Welcome()
         {
             return "This is the Welcome action method...";
+        }
+        
+        private string getMockResponse(int s) {
+            string response = "";
+            int kbSize = s * 1000;
+
+            for(int i=0; i<kbSize; i++) {
+                if (i % 100 == 0)
+                    response += "\n";
+                response += "!";
+            }
+
+            return response;
         }
     }
 }
