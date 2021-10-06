@@ -5,7 +5,7 @@
 **/.DS_Store
 
 # exclude local deploy configuration files and grafana-agent files that contain secrets
-.config/**
+/**/.config/**
 /**/_*.yml
 /**/_*.yaml
 /**/.env
