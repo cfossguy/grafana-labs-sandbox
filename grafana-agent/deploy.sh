@@ -1,3 +1,4 @@
+echo making a config directory that should not be checked into source control
 mkdir -p .config
 
 echo "INSTALLING BARE METRICS AGENT"
