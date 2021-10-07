@@ -31,8 +31,8 @@ export YOUR_LOKI_USERNAME=TODO
 export YOUR_LOKI_PASSWORD=TODO
 
 #grafana traces agent properties
-export TEMPO_USERNAME=TODO
-export TEMPO_PASSWORD=TODO
+export YOUR_TEMPO_USER=TODO
+export YOUR_TEMPO_PASSWORD=TODO
 ```
 2. Source the environment variables into your shell session and run the wrapper deploy shell script. 
 This will create YAML files that can be applied to your k8s cluster. 

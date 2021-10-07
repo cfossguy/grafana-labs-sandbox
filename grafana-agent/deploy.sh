@@ -44,7 +44,6 @@ kubectl apply -f .config/agent-traces.yaml -n $YOUR_NAMESPACE
 
 echo "INSTALLING TRACES AGENT CONFIGMAP (CONTAINS SECRETS)"
 cp agent-tempo-config-map.yaml ./.config
-sed -i '' "s#YOUR_LOKI_ENDPOINT#$YOUR_LOKI_ENDPOINT#g" .config/agent-loki-config-map.yaml
 sed -i '' "s/YOUR_TEMPO_USER/$YOUR_TEMPO_USER/g" .config/agent-tempo-config-map.yaml
 sed -i '' "s/YOUR_TEMPO_PASSWORD/$YOUR_TEMPO_PASSWORD/g" .config/agent-tempo-config-map.yaml
 sed -i '' "s/YOUR_NAMESPACE/$YOUR_NAMESPACE/g" .config/agent-tempo-config-map.yaml
