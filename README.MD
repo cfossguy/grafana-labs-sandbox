@@ -1,3 +1,5 @@
+https://jameswilliams1.grafana.net/explore?orgId=grafanacloud-jameswilliams1-prom,%7B%22refId%22:%22A%22,%22instant%22:true,%22range%22:true,%22exemplar%22:false,%22expr%22:%22${__series.name}%22%7D%5D
+
 # Command Line Snippets
 
 ### Easy Start - Grafana Cloud Agent
@@ -160,3 +162,24 @@ docker run -d --name graphite -p 80:80 -p 8080:8080 -p 2003-2004:2003-2004 -p 20
 5. Save and Test
 6. Click on Dashboards tab (next to Settings tab)
 7. Import Graphite Carbon Metrics dashboard
+
+#### Loki stack on k8s - in 5 commands
+```
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+kubectl create namespace loki
+helm install loki grafana/loki-stack --set grafana.enabled=true -n loki
+kubectl get secret -n loki loki-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+kubectl port-forward --namespace loki service/loki-grafana 3000:80
+```
+
+#### Loki stack on k8s (CLEANUP)
+```
+helm uninstall loki -n loki
+helm repo remove grafana
+kubectl delete ns loki
+```
+
+sum by (log_level) (rate({app="spring-node"} | logfmt [1m]))
+
+sum by (method, log_level) (count_over_time({job="default/spring-node"} | logfmt [1m]))

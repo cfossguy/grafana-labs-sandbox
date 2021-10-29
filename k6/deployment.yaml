@@ -19,7 +19,7 @@ kind: CronJob
 metadata:
   name: k6-errorgen
 spec:
-  schedule: "0 * * * *"
+  schedule: "*/1 * * * *"
   jobTemplate:
     spec:
       template:
