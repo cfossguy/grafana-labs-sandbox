@@ -1,7 +1,3 @@
-https://jameswilliams1.grafana.net/explore?orgId=grafanacloud-jameswilliams1-prom,%7B%22refId%22:%22A%22,%22instant%22:true,%22range%22:true,%22exemplar%22:false,%22expr%22:%22${__series.name}%22%7D%5D
-
-# Command Line Snippets
-
 ### Easy Start - Grafana Cloud Agent
 1. Install "Kubernetes" - grafana agent (metrics) - https://grafana.com/docs/grafana-cloud/quickstart/agent-k8s/k8s_agent_metrics/
 2. Install "Kubernetes" - grafana loki agent (logs) - https://grafana.com/docs/grafana-cloud/quickstart/agent-k8s/k8s_agent_logs/
@@ -180,6 +176,5 @@ helm repo remove grafana
 kubectl delete ns loki
 ```
 
-sum by (log_level) (rate({app="spring-node"} | logfmt [1m]))
-
+#### LogQL queries
 sum by (method, log_level) (count_over_time({job="default/spring-node"} | logfmt [1m]))

@@ -74,9 +74,11 @@ class SimpleRestController {
     }
 
     Random random = new Random();
-    int nbr = random.nextInt(odds) + 1;
+    int min = 1;
+    int max = odds;
+    int nbr = random.nextInt((max - min) + 1) + min;
     if (nbr == odds) {
-        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new RuntimeException("Something very bad happened. Bad luck...");
     }
     logger.warn(String.format("You have a 1 in %d chance of NOT getting this message", odds));
     return getMockResponse(1);
@@ -147,15 +149,15 @@ class SimpleRestController {
     return response;
   }
 
-  @ExceptionHandler({InterruptedException.class})
+  @ExceptionHandler({InterruptedException.class,RuntimeException.class})
   public String error(Exception e) throws ResponseStatusException {
-    logger.error(e.getMessage(), e);
+    logger.error(e.getMessage());
     throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   @ExceptionHandler({MethodArgumentTypeMismatchException.class})
   public String errorInvalidInput(Exception e) throws ResponseStatusException {
-    logger.error(e.getMessage(), e);
+    logger.error(e.getMessage());
     throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
   }
 
