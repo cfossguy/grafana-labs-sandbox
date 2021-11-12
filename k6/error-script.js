@@ -8,5 +8,5 @@ export let options = {
 };
 
 export default function () {
-  http.get('http://34.133.2.247/roulette/100')
+  http.get('http://34.134.135.13/roulette/100')
 }

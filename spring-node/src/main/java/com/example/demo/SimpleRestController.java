@@ -64,24 +64,24 @@ class SimpleRestController {
 
   @GetMapping("/roulette/{o}")
   String roulette(@PathVariable("o") String o) throws InterruptedException {
-    int odds = 0;
     try {
+        int odds = 0;
         odds = Integer.parseInt(o);
+        Random random = new Random();
+        int min = 1;
+        int max = odds;
+        int nbr = random.nextInt((max - min) + 1) + min;
+        if (nbr == odds) {
+            throw new RuntimeException("Something very bad happened. Bad luck...");
+        }
+        logger.warn(String.format("You have a 1 in %d chance of NOT getting this message", odds));
+        return getMockResponse(1);
     }
-    catch (Exception e){
-         logger.error(String.format("Invalid API Request Parameter o=%s",o));
-         throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    catch (Exception e) {
+         logger.error(e.getMessage());
+         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    Random random = new Random();
-    int min = 1;
-    int max = odds;
-    int nbr = random.nextInt((max - min) + 1) + min;
-    if (nbr == odds) {
-        throw new RuntimeException("Something very bad happened. Bad luck...");
-    }
-    logger.warn(String.format("You have a 1 in %d chance of NOT getting this message", odds));
-    return getMockResponse(1);
   }
 
   @GetMapping("/terminate")
@@ -149,7 +149,7 @@ class SimpleRestController {
     return response;
   }
 
-  @ExceptionHandler({InterruptedException.class,RuntimeException.class})
+  @ExceptionHandler({InterruptedException.class})
   public String error(Exception e) throws ResponseStatusException {
     logger.error(e.getMessage());
     throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
