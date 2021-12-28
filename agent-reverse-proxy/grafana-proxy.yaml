@@ -1,0 +1,75 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: test-name
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+  - kind: Rule
+    match: Host(`test.example.com`)
+    middlewares:
+    - name: middleware1
+      namespace: default
+    priority: 10
+    services:
+    - kind: Service
+      name: foo
+      namespace: default
+      passHostHeader: true
+      port: 80
+      responseForwarding:
+        flushInterval: 1ms
+      scheme: https
+      sticky:
+        cookie:
+          httpOnly: true
+          name: cookie
+          secure: true
+      strategy: RoundRobin
+      weight: 10
+  tls:
+    certResolver: foo
+    domains:
+    - main: example.net
+      sans:
+      - a.example.net
+      - b.example.net
+    options:
+      name: opt
+      namespace: default
+    secretName: supersecret
+
+---
+# All resources definition must be declared
+# Prefixing with /foo
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: middleware1
+  namespace: default
+spec:
+  addPrefix:
+    prefix: /foo
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: TLSOption
+metadata:
+  name: opt
+  namespace: default
+
+spec:
+  minVersion: VersionTLS12
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: supersecret
+
+data:
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0=
+  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0=
