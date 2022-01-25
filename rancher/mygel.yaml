@@ -1,0 +1,3 @@
+compactor:
+  persistentVolume:
+    storageClass: "direct-csi-min-io"

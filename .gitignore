@@ -7,5 +7,7 @@
 # exclude local deploy configuration files and grafana-agent files that contain secrets
 /**/.config/**
 /**/_*.yml
+/**/_*.sh
 /**/_*.yaml
 /**/.env
+/**/*.jwt
