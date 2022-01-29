@@ -69,7 +69,7 @@ spec:
             name: ge-config
         - name: ge-license
           secret:
-            secretName: enterprise-logs-license
+            secretName: gem-license
 ---
 apiVersion: v1
 kind: Service

@@ -1,0 +1,14 @@
+{
+  "apiVersion": "tanka.dev/v1alpha1",
+  "kind": "Environment",
+  "metadata": {
+    "name": "environments/enterprise-metrics",
+    "namespace": "environments/enterprise-metrics/main.jsonnet"
+  },
+  "spec": {
+    "apiServer": "https://34.72.188.105/k8s/clusters/c-nw6qp",
+    "namespace": "enterprise-metrics",
+    "resourceDefaults": {},
+    "expectVersions": {}
+  }
+}
