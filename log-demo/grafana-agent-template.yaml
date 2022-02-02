@@ -1,0 +1,42 @@
+integrations:
+  node_exporter:
+    enabled: true
+logs:
+  configs:
+  - clients:
+    - basic_auth:
+        password: GCLOUD_PASSWORD_LOGS
+        username: GCLOUD_USERNAME_LOGS
+      url: GCLOUD_REMOTE_WRITE_URL_LOGS
+    name: integrations
+    positions:
+      filename: /tmp/positions.yaml
+    target_config:
+      sync_period: 10s
+    scrape_configs:
+    - job_name: tomcat_app
+      static_configs:
+      - targets: [ localhost ]
+        labels:
+          app: tomcat_app
+          __path__: ./mylogs/app.log
+    - job_name: tomcat_server
+      static_configs:
+      - targets: [ localhost ]
+        labels:
+          server: tomcat_server
+          __path__: ./apache-tomcat-8.5.75/logs/*.log
+server:
+  http_listen_port: 12345
+
+metrics:
+  wal_directory: /tmp/grafana-agent-wal
+  global:
+    external_labels:
+      app: tomcat_app
+    scrape_interval: 15s
+    remote_write:
+      - url: GCLOUD_REMOTE_WRITE_URL_METRICS
+        basic_auth:
+          username: GCLOUD_USERNAME_METRICS
+          password: GCLOUD_PASSWORD_METRICS

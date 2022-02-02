@@ -1,3 +1,0 @@
-http://34.67.187.12:8080/log-demo-1.0-SNAPSHOT/hello-servlet
-
-find ./ -type f -exec grep -H 'ID: 1643407249079-9900' {} \;
