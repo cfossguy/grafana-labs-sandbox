@@ -9,18 +9,28 @@ scripts/tools are included in this guide so that you can edit the code or config
 ## Prerequisites
 * Google Cloud's [SDK](https://cloud.google.com/sdk]) - Needed to run ```gcloud``` commands in a terminal window.
 * [Grafana Cloud](https://grafana.com/auth/sign-up/create-user) - Needed to send and visualize metrics and logs data.
-* [Python](https://www.python.org/downloads/) - The walk-thru is packaged as a simple python CLI that can be re-purposed 
-with ANY configuration management tool.
+* [Python3](https://www.python.org/downloads/) - The walk-thru is packaged as a simple python CLI that can be re-purposed 
+with ANY configuration management tool. 
 
 ## Quickstart Guide
 ### Step 1
 Git clone grafana-labs-sandbox. Each folder in the sandbox is dedicated to a specific 
 use case. All files required for this walk-thru reside in the ```log-demo``` folder.
+Open a terminal and run
 
 ```
 git clone https://github.com/cfossguy/grafana-labs-sandbox
-cd ./log-demo
+cd ./grafana-labs-sandbox/log-demo
+pip install --user pipenv
+pipenv shell
+pip install pyinstaller 
+pip install -r requirements.txt
+pyinstaller -F demo.py --distpath .
+./demo
 ```
+
+If you see a list of commands then it is safe to proceed to **Step 2**. If not, then you will need
+to debug why pyinstaller failed. 
 
 ### Step 2
 Make sure that you have a file named ```.env``` that is *NOT* checked into source control. 
@@ -74,3 +84,4 @@ This will ssh into the VM so that you can inspect the file system and running pr
 3. ```kill -9 PID``` - Handy if you want to retry a demo command without tearing down the whole VM
 4. Run any ```os.system``` command in ```demo.py``` manually. For example, line 117 uses this command: ```./agent-linux-amd64 -config.file ./grafana-agent.yaml```
 to start the grafana agent process. 
+5. If you find a bug in ```demo.py``` you can fix then re-build the demo CLI with ```pyinstaller -F demo.py --distpath .```
