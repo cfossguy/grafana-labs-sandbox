@@ -1,2 +1,2 @@
 #/bin/sh
-pipenv run python demo.py
+pipenv run python demo.py $@

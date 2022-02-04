@@ -8,9 +8,11 @@ scripts/tools are included in this guide so that you can edit the code or config
 
 ## Prerequisites
 * Google Cloud's [SDK](https://cloud.google.com/sdk]) - Needed to run ```gcloud``` commands in a terminal window.
-* [Grafana Cloud](https://grafana.com/auth/sign-up/create-user) - Needed to send and visualize metrics and logs data.
 * [Python3](https://www.python.org/downloads/) - The walk-thru is packaged as a simple python CLI that can be re-purposed 
 with ANY configuration management tool. 
+* [Pipenv](https://pipenv.pypa.io/en/latest/) - Pipenv provides an easy method to set up a clean python **infrastructure as code**
+workspace.  
+* [Grafana Cloud](https://grafana.com/auth/sign-up/create-user) - Needed to send and visualize metrics and logs data.
 
 ## Quickstart Guide
 ### Step 1
@@ -28,7 +30,7 @@ pipenv install
 ```
 
 If you see a list of commands then it is safe to proceed to **Step 2**. If not, then you will need
-to debug why pyinstaller failed. 
+to debug your Python installation.  
 
 ### Step 2
 Make sure that you have a file named ```.env``` that is *NOT* checked into source control. 
