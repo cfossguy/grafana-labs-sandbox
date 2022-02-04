@@ -16,16 +16,14 @@ with ANY configuration management tool.
 ### Step 1
 Git clone grafana-labs-sandbox. Each folder in the sandbox is dedicated to a specific 
 use case. All files required for this walk-thru reside in the ```log-demo``` folder.
-Open a terminal and run
+Open a terminal and run:
 
 ```
 git clone https://github.com/cfossguy/grafana-labs-sandbox
 cd ./grafana-labs-sandbox/log-demo
 pip install --user pipenv
 pipenv shell
-pip install pyinstaller 
-pip install -r requirements.txt
-pyinstaller -F demo.py --distpath .
+pipenv install 
 ./demo
 ```
 
