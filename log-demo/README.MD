@@ -4,7 +4,10 @@ grafana agent to collect metrics and logs for a legacy tomcat application.
 This demo guide is designed for usage with Google Cloud. 
 
 You will not need to edit any Java code. All source code and configuration files and build
-scripts/tools are included in this guide so that you can edit the code or configuration. 
+scripts/tools are included in this guide, to make it easy for you to test and integrate your 
+own configuration management process. 
+
+![Logical Architecture](logical_architecture.png)
 
 ## Prerequisites
 * Google Cloud's [SDK](https://cloud.google.com/sdk]) - Needed to run ```gcloud``` commands in a terminal window.
@@ -67,8 +70,8 @@ Log into [Grafana](https://grafana.com/auth/sign-in/?plcmt=top-nav&cta=myaccount
 [Integrations Management](https://jameswilliams1.grafana.net/a/grafana-easystart-app/integrations-management/integrations/linux-node) 
 to install pre-built metrics dashboards for your Linux VM. You can skip grafana agent installation because the agent is already installed.
 
-* You can use ```Explore``` for the label ```{app=tomcat_app}``` on the Prometheus datasource.
-* You can use ```Explore``` for the labels ```{server=tomcat_server}``` and ```{app=tomcat_app}```on the Logs datasource.
+* You can use ```Explore``` for the label ```{app="tomcat_app"}``` on the Prometheus datasource.
+* You can use ```Explore``` for the labels ```{server="tomcat_server"}``` and ```{app="tomcat_app"}```on the Logs datasource.
 * OPTIONAL - You can edit ```grafana-agent-template.yaml``` and re-run **Step 3**. This is handy for testing different 
 grafana agent configuration settings. You can change the agent labels, log destinations, scrape intervals and more.
 

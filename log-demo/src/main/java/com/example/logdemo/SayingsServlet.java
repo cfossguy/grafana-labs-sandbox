@@ -34,7 +34,6 @@ public class SayingsServlet extends HttpServlet {
         String message;
 
         PrintWriter out = response.getWriter();
-        out.println("<html><body>");
         for (int i=0; i<10000; i++)
         {
             String id = String.format("%d-%d",System.currentTimeMillis(),i);
@@ -42,18 +41,17 @@ public class SayingsServlet extends HttpServlet {
 
             if (i % 100 == 0) {
                 logger.error(String.format("Log ID: %s - %s", id, message));
-                out.println(String.format("<p>ID: %s - Message: %s</p>", id, message));
+                out.println(String.format("ID: %s - Message: %s", id, message));
             }
             else if (i % 10 == 0) {
                 logger.warn(String.format("Log ID: %s - %s", id, message));
-                out.println(String.format("<p>ID: %s - Message: %s</p>", id, message));
+                out.println(String.format("ID: %s - Message: %s", id, message));
             }
             else{
                 logger.info(String.format("Log ID: %s - %s", id, message));
-                out.println(String.format("<p>ID: %s - Message: %s</p>", id, message));
+                out.println(String.format("ID: %s - Message: %s", id, message));
             }
         }
-        out.println("</body></html>");
     }
 
     public void destroy() {

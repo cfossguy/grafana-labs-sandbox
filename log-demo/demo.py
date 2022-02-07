@@ -1,7 +1,9 @@
 # importing the required modules
 import click
 import os
+import time
 import subprocess
+import requests
 import yaml
 from dotenv import load_dotenv
 
@@ -61,17 +63,27 @@ def install_app():
     print("Created log-demo directory")
     os.system(f"gcloud compute scp ./pom.xml {gcp_vm_name}:~/log-demo --zone={gcp_zone}")
     print("Copied pom.xml to log-demo directory")
-    os.system(f"gcloud compute scp --recurse ./src {gcp_vm_name}:~/log-demo/src --zone={gcp_zone}")
+    os.system(f"gcloud compute scp --recurse ./src {gcp_vm_name}:~/log-demo --zone={gcp_zone}")
     print("Copied source files to log-demo directory")
     os.system(f"gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- './apache-maven-3.8.4/bin/mvn clean package -f ./log-demo/pom.xml;"
               f"cp ./log-demo/target/log-demo-*.war ./apache-tomcat-*/webapps'")
     print("WAR file built and deployed to tomcat webapps directory")
-    external_ip = subprocess.check_output(["gcloud", "compute", "instances", "list", f"--filter=name={gcp_vm_name}", "--format=value(EXTERNAL_IP)"])
+    print("Run Next: ./demo 4.test-app")
+
+@click.command()
+def test_app():
+    """Invoke the log-demo sample application"""
+    external_ip = subprocess.check_output(
+        ["gcloud", "compute", "instances", "list", f"--filter=name={gcp_vm_name}", "--format=value(EXTERNAL_IP)"])
     external_ip = external_ip.strip().decode("utf-8")
-    print(f"external ip is: {external_ip}")
     print(f"Application should be available at: http://{external_ip}:8080/log-demo-1.0-SNAPSHOT/")
-    print("Click the URL to generate log entries that you can search for in Grafana")
-    print("Run Next: ./demo 4.install-grafana-agent")
+    for x in range(3):
+        "Invoking test url 3 times with 10 second sleep interval to generate log entries"
+        test_url = f"http://{external_ip}:8080/log-demo-1.0-SNAPSHOT/"
+        test_response = requests.get(test_url)
+        print(test_response.text)
+        time.sleep(10)
+    print("Run Next: ./demo 5.install-grafana-agent")
 
 @click.command()
 def install_grafana_agent():
@@ -80,7 +92,7 @@ def install_grafana_agent():
                             "unzip -o agent-linux-amd64.zip; chmod a+x agent-linux-amd64;"
     os.system(f"gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- '{downlod_grafana_agent}'")
     print("Grafana agent installed")
-    print("Run Next: ./demo 5.set-agent-config-and-run")
+    print("Run Next: ./demo 6.set-agent-config-and-run")
 
 @click.command()
 def ssh():
@@ -125,8 +137,9 @@ def teardown():
 cli.add_command(install_vm, name="1.install-vm")
 cli.add_command(install_dependencies, name="2.install-dependencies")
 cli.add_command(install_app, name="3.install-app")
-cli.add_command(install_grafana_agent, name="4.install-grafana-agent")
-cli.add_command(set_grafana_agent_config_and_run, name="5.set-agent-config-and-run")
+cli.add_command(test_app, name="4.test-app")
+cli.add_command(install_grafana_agent, name="5.install-grafana-agent")
+cli.add_command(set_grafana_agent_config_and_run, name="6.set-agent-config-and-run")
 cli.add_command(teardown, name="teardown")
 cli.add_command(ssh, name="ssh")
 
