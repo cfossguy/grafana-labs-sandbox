@@ -2,6 +2,7 @@
 /spring-node/target/**
 /data/**
 .idea/**
+**/.idea/**
 **/.DS_Store
 
 # exclude local deploy configuration files and grafana-agent files that contain secrets
