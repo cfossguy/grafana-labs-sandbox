@@ -34,7 +34,7 @@ public class SayingsServlet extends HttpServlet {
         String message;
 
         PrintWriter out = response.getWriter();
-        for (int i=0; i<10000; i++)
+        for (int i=0; i<1000; i++)
         {
             String id = String.format("%d-%d",System.currentTimeMillis(),i);
             message = getPhrase();

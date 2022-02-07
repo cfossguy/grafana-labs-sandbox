@@ -76,13 +76,16 @@ def test_app():
     external_ip = subprocess.check_output(
         ["gcloud", "compute", "instances", "list", f"--filter=name={gcp_vm_name}", "--format=value(EXTERNAL_IP)"])
     external_ip = external_ip.strip().decode("utf-8")
+    test_times = 30
+    sleep_duration = 1
     print(f"Application should be available at: http://{external_ip}:8080/log-demo-1.0-SNAPSHOT/")
-    for x in range(3):
-        "Invoking test url 3 times with 10 second sleep interval to generate log entries"
+    for x in range(test_times):
         test_url = f"http://{external_ip}:8080/log-demo-1.0-SNAPSHOT/"
         test_response = requests.get(test_url)
         print(test_response.text)
-        time.sleep(10)
+        print(f"Invoked test url {x+1} of {test_times} times with {sleep_duration} second sleep interval to generate log entries")
+        if (x+1) < test_times:
+            time.sleep(sleep_duration)
     print("Run Next: ./demo 5.install-grafana-agent")
 
 @click.command()

@@ -72,6 +72,8 @@ to install pre-built metrics dashboards for your Linux VM. You can skip grafana 
 
 * You can use ```Explore``` for the label ```{app="tomcat_app"}``` on the Prometheus datasource.
 * You can use ```Explore``` for the labels ```{server="tomcat_server"}``` and ```{app="tomcat_app"}```on the Logs datasource.
+* You can use ```Explore``` with the following pattern match query ```{app="tomcat_app"} | pattern "<_> <_> <level> <_> <class> <_> <_> <_> <log_id> <_> <msg>"```
+* You can enhance the "Node Exporter / USE Method / Node" dashboard to include app specific logs and metrics data.
 * OPTIONAL - You can edit ```grafana-agent-template.yaml``` and re-run **Step 3**. This is handy for testing different 
 grafana agent configuration settings. You can change the agent labels, log destinations, scrape intervals and more.
 
