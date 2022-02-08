@@ -77,6 +77,19 @@ to install pre-built metrics dashboards for your Linux VM. You can skip grafana 
 * OPTIONAL - You can edit ```grafana-agent-template.yaml``` and re-run **Step 3**. This is handy for testing different 
 grafana agent configuration settings. You can change the agent labels, log destinations, scrape intervals and more.
 
+#### Interesting Panel Queries
+```
+node_load1{app="tomcat_app"}
+
+{app="tomcat_app"} | pattern "<_> <_> <level> <_> <class> <_> <_> <_> <log_id> <_> <msg>"
+
+sum by(msg) (count_over_time({app="tomcat_app"} | 
+    pattern "<_> <_> <level> <_> <class> <_> <_> <_> <log_id> <_> <msg>"[1m]))
+
+sum by(level) (count_over_time({app="tomcat_app"} | pattern "<_> <_> <level> <_> <class> <_> <_> <_> <log_id> <_> <msg>"[1m])) 
+```
+
+
 ### Step 5
 Free up the google cloud infrastructure you created by running ```./demo 6.teardown```. This will delete ALL installed
 software and your VM. Grafana Cloud will still have the metrics and logs data that was sent prior to teardown.

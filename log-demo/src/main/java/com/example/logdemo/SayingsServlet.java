@@ -39,11 +39,11 @@ public class SayingsServlet extends HttpServlet {
             String id = String.format("%d-%d",System.currentTimeMillis(),i);
             message = getPhrase();
 
-            if (i % 100 == 0) {
+            if (i % 10 == 0) {
                 logger.error(String.format("Log ID: %s - %s", id, message));
                 out.println(String.format("ID: %s - Message: %s", id, message));
             }
-            else if (i % 10 == 0) {
+            else if (i % 5 == 0) {
                 logger.warn(String.format("Log ID: %s - %s", id, message));
                 out.println(String.format("ID: %s - Message: %s", id, message));
             }
