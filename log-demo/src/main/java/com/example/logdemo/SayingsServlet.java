@@ -51,6 +51,12 @@ public class SayingsServlet extends HttpServlet {
                 logger.info(String.format("Log ID: %s - %s", id, message));
                 out.println(String.format("ID: %s - Message: %s", id, message));
             }
+            try{
+                Thread.sleep(10);
+            }
+            catch(InterruptedException exc){
+                 logger.error(exc.getMessage());
+            }
         }
     }
 

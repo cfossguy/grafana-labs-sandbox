@@ -67,7 +67,7 @@ run in this terminal window.
 
 ### Step 4
 Log into [Grafana](https://grafana.com/auth/sign-in/?plcmt=top-nav&cta=myaccount) and visualize your data. You can use 
-[Integrations Management](https://jameswilliams1.grafana.net/a/grafana-easystart-app/integrations-management/integrations/linux-node) 
+[Integrations Management](https://grafana.com/docs/grafana-cloud/integrations/install-and-manage-integrations/) 
 to install pre-built metrics dashboards for your Linux VM. You can skip grafana agent installation because the agent is already installed.
 
 * You can use ```Explore``` for the label ```{app="tomcat_app"}``` on the Prometheus datasource.
@@ -77,16 +77,22 @@ to install pre-built metrics dashboards for your Linux VM. You can skip grafana 
 * OPTIONAL - You can edit ```grafana-agent-template.yaml``` and re-run **Step 3**. This is handy for testing different 
 grafana agent configuration settings. You can change the agent labels, log destinations, scrape intervals and more.
 
-#### Interesting Panel Queries
+#### Interesting Panel Queries - Prometheus
 ```
 node_load1{app="tomcat_app"}
+node_load5{app="tomcat_app"}
+node_load15{app="tomcat_app"}
+```
 
+#### Interesting Panel Queries - Loki
+```
 {app="tomcat_app"} | pattern "<_> <_> <level> <_> <class> <_> <_> <_> <log_id> <_> <msg>"
 
 sum by(msg) (count_over_time({app="tomcat_app"} | 
     pattern "<_> <_> <level> <_> <class> <_> <_> <_> <log_id> <_> <msg>"[1m]))
 
-sum by(level) (count_over_time({app="tomcat_app"} | pattern "<_> <_> <level> <_> <class> <_> <_> <_> <log_id> <_> <msg>"[1m])) 
+sum by(level) (count_over_time({app="tomcat_app"} | 
+    pattern "<_> <_> <level> <_> <class> <_> <_> <_> <log_id> <_> <msg>"[1m])) 
 ```
 
 
