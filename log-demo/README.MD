@@ -20,7 +20,7 @@ workspace.
 ## Quickstart Guide
 
 ### Step 0
-If you have Python 3 and have not used *pipenv* before, please install this module.
+If you have Python 3 and have not used *pipenv* before, please install this tool.
 It will ensure that you have a clean workspace for this infrastructure as code walk-thru.
 
 ```pip install --user pipenv```
