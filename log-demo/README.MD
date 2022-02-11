@@ -18,6 +18,13 @@ workspace.
 * [Grafana Cloud](https://grafana.com/auth/sign-up/create-user) - Needed to send and visualize metrics and logs data.
 
 ## Quickstart Guide
+
+### Step 0
+If you have Python 3 and have not used *pipenv* before, please install this module.
+It will ensure that you have a clean workspace for this infrastructure as code walk-thru.
+
+```pip install --user pipenv```
+
 ### Step 1
 Git clone grafana-labs-sandbox. Each folder in the sandbox is dedicated to a specific 
 use case. All files required for this walk-thru reside in the ```log-demo``` folder.
@@ -26,7 +33,6 @@ Open a terminal and run:
 ```
 git clone https://github.com/cfossguy/grafana-labs-sandbox
 cd ./grafana-labs-sandbox/log-demo
-pip install --user pipenv
 pipenv shell
 pipenv install 
 ./demo
