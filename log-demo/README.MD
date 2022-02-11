@@ -55,6 +55,9 @@ gcloud_password_logs=YOUR_GRAFANA_CLOUD_LOGS_PASSWORD
 
 gcloud_remote_write_url_metrics=YOUR_GRAFANA_CLOUD_METRICS_REMOTE_WRITE_URL
 gcloud_remote_write_url_logs=YOUR_GRAFANA_CLOUD_LOGS_REMOTE_WRITE_URL
+
+gcloud_password_dashboards=YOUR_GRAFANA_API_KEY (can create in Grafana UI: 'Configuration -> 'API Keys')
+gcloud_domain_dashboards=YOUR_DASHBOARD_BASE_URL (ie: https://yourdomain.grafana.net)
 ```
 
 ### Step 3
@@ -73,17 +76,16 @@ to install pre-built metrics dashboards for your Linux VM. You can skip grafana 
 * You can use ```Explore``` for the label ```{app="tomcat_app"}``` on the Prometheus datasource.
 * You can use ```Explore``` for the labels ```{server="tomcat_server"}``` and ```{app="tomcat_app"}```on the Logs datasource.
 * You can use ```Explore``` with the following pattern match query ```{app="tomcat_app"} | pattern "<_> <_> <level> <_> <class> <_> <_> <_> <log_id> <_> <msg>"```
-* You can enhance the "Node Exporter / USE Method / Node" dashboard to include app specific logs and metrics data.
 * OPTIONAL - You can edit ```grafana-agent-template.yaml``` and re-run **Step 3**. This is handy for testing different 
 grafana agent configuration settings. You can change the agent labels, log destinations, scrape intervals and more.
 
 #### Interesting Panel Queries - Prometheus
 ```
-node_load1{app="tomcat_app"}
-node_load5{app="tomcat_app"}
-node_load15{app="tomcat_app"}
+instance:node_cpu_utilisation:rate5m{app="tomcat_app"} != 0
+instance:node_memory_utilisation:ratio{app="tomcat_app"} != 0
+instance:node_network_receive_bytes_excluding_lo:rate5m{app="tomcat_app"} != 0
 ```
-
+100 - (avg by (app) (rate(node_cpu_seconds_total{app="tomcat_app",mode="idle"}[1m])) * 100)
 #### Interesting Panel Queries - Loki
 ```
 {app="tomcat_app"} | pattern "<_> <_> <level> <_> <class> <_> <_> <_> <log_id> <_> <msg>"
@@ -94,7 +96,6 @@ sum by(msg) (count_over_time({app="tomcat_app"} |
 sum by(level) (count_over_time({app="tomcat_app"} | 
     pattern "<_> <_> <level> <_> <class> <_> <_> <_> <log_id> <_> <msg>"[1m])) 
 ```
-
 
 ### Step 5
 Free up the google cloud infrastructure you created by running ```./demo 6.teardown```. This will delete ALL installed

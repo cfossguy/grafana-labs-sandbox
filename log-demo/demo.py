@@ -1,10 +1,9 @@
 # importing the required modules
 import click
 import os
-import time
-import subprocess
 import requests
 import yaml
+import webbrowser
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
@@ -36,23 +35,29 @@ def install_vm():
                        "--no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any"
 
     os.system(gcloud_create)
-    print("VM provisioned on GCP. Wait ~60 seconds. Next run: ./demo 2.install-dependencies")
+    print("VM provisioned on GCP. Wait ~60 seconds.")
+    print("Next run: ./demo 2.install-dependencies")
 
 @click.command()
 def install_dependencies():
-    """Provision OpenJDK+Maven+Tomcat on Linux VM."""
+    """Provision OpenJDK+Maven+Tomcat+K6+Grafana Agent on Linux VM."""
     install_dependencies = "sudo apt-get -qq install default-jdk; sudo apt-get -qq install unzip; " \
                      "sudo wget -nc https://dlcdn.apache.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.zip; " \
                      "sudo unzip -o apache-maven-*-bin.zip; " \
                      "sudo wget -nc https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.75/bin/apache-tomcat-8.5.75.zip; " \
                      "sudo unzip -o apache-tomcat-*.zip; " \
                      "sudo chmod 755 -R ./apache-*/; " \
-                     "sudo chown -R `whoami`:`whoami` ./apache-tomcat-8.5.75"
-
-    start_tomcat = "./apache-tomcat-8.5.75/bin/startup.sh"
+                     "sudo chown -R `whoami`:`whoami` ./apache-tomcat-8.5.75; " \
+                     "sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69; " \
+                     "echo \"deb https://dl.k6.io/deb stable main\" | sudo tee /etc/apt/sources.list.d/k6.list; " \
+                     "sudo apt-get update; " \
+                     "sudo apt-get install k6; " \
+                     "sudo wget -nc https://github.com/grafana/agent/releases/download/v0.22.0/agent-linux-amd64.zip; " \
+                     "unzip -o agent-linux-amd64.zip; chmod a+x agent-linux-amd64;"
 
     os.system(f"gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- '{install_dependencies}'")
-    print("OpenJDK, Apache Maven and Apache Tomcat downloaded and installed")
+    print("OpenJDK, Maven, Tomcat and K6 downloaded and installed")
+    start_tomcat = "./apache-tomcat-8.5.75/bin/startup.sh"
     os.system(f"nohup gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- '{start_tomcat}' &>/dev/null &")
     print("Tomcat started in background on VM. Run Next: ./demo 3.install-app")
 
@@ -68,37 +73,36 @@ def install_app():
     os.system(f"gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- './apache-maven-3.8.4/bin/mvn clean package -f ./log-demo/pom.xml;"
               f"cp ./log-demo/target/log-demo-*.war ./apache-tomcat-*/webapps'")
     print("WAR file built and deployed to tomcat webapps directory")
-    print("Run Next: ./demo 4.test-app")
+    print("Run Next: ./demo 4.load-test-app")
 
 @click.command()
-def test_app():
-    """Invoke the log-demo sample application"""
-    external_ip = subprocess.check_output(
-        ["gcloud", "compute", "instances", "list", f"--filter=name={gcp_vm_name}", "--format=value(EXTERNAL_IP)"])
-    external_ip = external_ip.strip().decode("utf-8")
-    test_times = 10
-    sleep_duration = 1
-    print(f"Application should be available at: http://{external_ip}:8080/log-demo-1.0-SNAPSHOT/")
-    for x in range(test_times):
-        test_url = f"http://{external_ip}:8080/log-demo-1.0-SNAPSHOT/"
-        test_response = requests.get(test_url)
-        print(test_response.text)
-        print(f"Invoked test url {x+1} of {test_times} times to generate log entries")
-    print("Run Next: ./demo 5.install-grafana-agent")
+def load_test_app():
+    """Run k6 load test"""
+    run_k6 = "k6 run k6-script.js --quiet"
+    os.system(f"gcloud compute scp k6-script.js {gcp_vm_name}:~/ --zone={gcp_zone}")
+    os.system(f"nohup gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- '{run_k6}' &>/dev/null &")
+    print("Load test will run in background for 24 hours")
+    print("Run Next: ./demo 5.install-dashboard")
 
 @click.command()
-def install_grafana_agent():
-    """Provision grafana agent on Linux VM."""
-    downlod_grafana_agent = "sudo wget -nc https://github.com/grafana/agent/releases/download/v0.22.0/agent-linux-amd64.zip; " \
-                            "unzip -o agent-linux-amd64.zip; chmod a+x agent-linux-amd64;"
-    os.system(f"gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- '{downlod_grafana_agent}'")
-    print("Grafana agent installed")
+def install_dashboard():
+    """Provision a custom metrics+logs"""
+    gcloud_password_dashboards = os.getenv('gcloud_password_dashboards')
+    gcloud_domain_dashboards = os.getenv('gcloud_domain_dashboards')
+    url = f"{gcloud_domain_dashboards}/api/dashboards/db"
+
+    dashboard = open('dashboard.json')
+    headers = {"Accept": "application/json",
+               "Content-Type": "application/json",
+               "Authorization": f"Bearer {gcloud_password_dashboards}"}
+    response = requests.post(url=url, data=dashboard, headers=headers)
+    try:
+        dashboard_url = f"{gcloud_domain_dashboards}{response.json()['url']}"
+        print(f"Dashboard url is:{dashboard_url}")
+        webbrowser.open(dashboard_url)
+    except KeyError:
+        print(f"Error occurred: {response.text}")
     print("Run Next: ./demo 6.set-agent-config-and-run")
-
-@click.command()
-def ssh():
-    """SSH into the Linux VM. (Troubleshooting)"""
-    os.system(f"gcloud beta compute ssh --zone '{gcp_zone}' '{gcp_vm_name}' --tunnel-through-iap")
 
 @click.command()
 def set_grafana_agent_config_and_run():
@@ -130,6 +134,11 @@ def set_grafana_agent_config_and_run():
     os.system(f"gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- './agent-linux-amd64 -config.file ./grafana-agent.yaml'")
 
 @click.command()
+def ssh():
+    """SSH into the Linux VM. (Troubleshooting)"""
+    os.system(f"gcloud beta compute ssh --zone '{gcp_zone}' '{gcp_vm_name}' --tunnel-through-iap")
+
+@click.command()
 def teardown():
     """Un-provision Linux VM on GCP."""
     os.system(f"gcloud compute instances delete {gcp_vm_name} --zone={gcp_zone} --quiet")
@@ -138,8 +147,8 @@ def teardown():
 cli.add_command(install_vm, name="1.install-vm")
 cli.add_command(install_dependencies, name="2.install-dependencies")
 cli.add_command(install_app, name="3.install-app")
-cli.add_command(test_app, name="4.test-app")
-cli.add_command(install_grafana_agent, name="5.install-grafana-agent")
+cli.add_command(load_test_app, name="4.load-test-app")
+cli.add_command(install_dashboard, name="5.install-dashboard")
 cli.add_command(set_grafana_agent_config_and_run, name="6.set-agent-config-and-run")
 cli.add_command(teardown, name="teardown")
 cli.add_command(ssh, name="ssh")

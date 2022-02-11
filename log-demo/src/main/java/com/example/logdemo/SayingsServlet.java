@@ -16,7 +16,7 @@ public class SayingsServlet extends HttpServlet {
 
     public void init() {
         phrases = new HashMap<>();
-        phrases.put(0,"The grass is always greener on the other side");
+        phrases.put(0,"Grass is greener on the other side");
         phrases.put(1, "Take it with a grain of salt");
         phrases.put(2, "A chip on your shoulder");
         phrases.put(3, "A dime a dozen");
@@ -26,47 +26,60 @@ public class SayingsServlet extends HttpServlet {
         phrases.put(7, "Back to square one");
         phrases.put(8, "Beating around the bush");
         phrases.put(9, "Between a rock and hard place");
-        phrases.put(10, "Burst your bubble");
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
         String message;
+        String id;
 
         PrintWriter out = response.getWriter();
-        for (int i=0; i<1000; i++)
+        try
         {
-            String id = String.format("%d-%d",System.currentTimeMillis(),i);
-            message = getPhrase();
-
-            if (i % 10 == 0) {
-                logger.error(String.format("Log ID: %s - %s", id, message));
-                out.println(String.format("ID: %s - Message: %s", id, message));
-            }
-            else if (i % 5 == 0) {
+            for (int i = 0; i < 100; i++){
+                id = String.format("%d-%d",System.currentTimeMillis(),i);
+                message = getPhrase(false);
                 logger.warn(String.format("Log ID: %s - %s", id, message));
                 out.println(String.format("ID: %s - Message: %s", id, message));
+                Thread.sleep(100);
+
+                for (int j = 0; j < 10; j++){
+                    id = String.format("%d-%d",System.currentTimeMillis(),i);
+                    message = getPhrase(false);
+                    logger.info(String.format("Log ID: %s - %s", id, message));
+                    out.println(String.format("ID: %s - Message: %s", id, message));
+                    Thread.sleep(100);
+                }
             }
-            else{
-                logger.info(String.format("Log ID: %s - %s", id, message));
-                out.println(String.format("ID: %s - Message: %s", id, message));
-            }
-            try{
-                Thread.sleep(10);
-            }
-            catch(InterruptedException exc){
-                 logger.error(exc.getMessage());
-            }
+            message = getPhrase(true);
+            id = String.format("%d-%d",System.currentTimeMillis(),0);
+            logger.error(String.format("Log ID: %s - %s", id, message));
+            out.println(String.format("ID: %s - Message: %s", id, message));
+            Thread.sleep(1000);
+        }
+
+        catch(InterruptedException exc){
+             logger.error(exc.getMessage());
         }
     }
 
     public void destroy() {
     }
 
-    private String getPhrase(){
-        int max = phrases.size();
-        int min = 0;
-        int random_int = (int)Math.floor(Math.random()*(max-min)+min);
+    private String getPhrase(boolean isError){
+
+        int random_int = (int)Math.floor(Math.random()*(phrases.size()));
+        int put_index = phrases.size();
+        if (isError)
+        {
+            if (put_index % 2 == 0)
+                phrases.put(put_index , "If you're not first you are last");
+            else if (put_index % 3 == 0)
+                phrases.put(put_index , "Take it with a grain of salt");
+            else if (put_index % 5 == 0)
+                phrases.put(put_index , "A piece of cake");
+        }
+
         return phrases.get(random_int);
     }
 }

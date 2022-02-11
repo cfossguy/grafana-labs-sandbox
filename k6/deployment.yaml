@@ -11,7 +11,7 @@ spec:
           containers:
           - name: k6-loadgen
             image: loadimpact/k6
-            command: ["k6", "run", "https://raw.githubusercontent.com/cfossguy/grafana-labs-sandbox/main/k6/script.js"]
+            command: ["k6", "run", "https://raw.githubusercontent.com/cfossguy/grafana-labs-sandbox/main/k6/k6-script.js"]
           restartPolicy: Never
 ---
 apiVersion: batch/v1beta1
@@ -27,7 +27,7 @@ spec:
           containers:
           - name: k6-errorgen
             image: loadimpact/k6
-            command: ["k6", "run", "https://raw.githubusercontent.com/cfossguy/grafana-labs-sandbox/main/k6/error-script.js"]
+            command: ["k6", "run", "https://raw.githubusercontent.com/cfossguy/grafana-labs-sandbox/main/k6/error-k6-script.js"]
           restartPolicy: Never
 ---
 apiVersion: batch/v1beta1
@@ -43,5 +43,5 @@ spec:
           containers:
           - name: k6-spikegen
             image: loadimpact/k6
-            command: ["k6", "run", "https://raw.githubusercontent.com/cfossguy/grafana-labs-sandbox/main/k6/spike-script.js"]
+            command: ["k6", "run", "https://raw.githubusercontent.com/cfossguy/grafana-labs-sandbox/main/k6/spike-k6-script.js"]
           restartPolicy: Never

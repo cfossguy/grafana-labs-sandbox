@@ -105,7 +105,7 @@ kubectl scale deployment spring-node --replicas=6
 ### K6 load test
 ```
 cd k6
-k6 run --vus 10 --duration 300s script.js
+k6 run --vus 10 --duration 300s k6-script.js
 ```
 
 ### k8s deploy of k6 scripts
