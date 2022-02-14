@@ -69,10 +69,7 @@ gcloud_domain_dashboards=YOUR_DASHBOARD_BASE_URL (ie: https://yourdomain.grafana
 ### Step 3
 Open a terminal window and run ```./demo``` to see the command line interface commands. 
 Each command starts with a number to denote order. After a command runs, you will see
-output for ```Next Run:```. Keep running commands until you see grafana agent output. 
-
-CTRL+C will stop the grafana agent and halt metrics/logs collection. Let's let the agent
-run in this terminal window.
+output for ```Next Run:```. Keep running commands until you see grafana agent output.
 
 ### Step 4
 Log into [Grafana](https://grafana.com/auth/sign-in/?plcmt=top-nav&cta=myaccount) and visualize your data. You can use 
