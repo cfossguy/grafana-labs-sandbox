@@ -131,7 +131,8 @@ def set_grafana_agent_config_and_run():
     print("WARNING - Files written to .config directory should not be checked into source control because they contain secrets!")
     os.system(f"gcloud compute scp './.config/grafana-agent.yaml' {gcp_vm_name}:'~/grafana-agent.yaml' --zone={gcp_zone}")
     print("Grafana agent configuration copied to VM")
-    os.system(f"gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- './agent-linux-amd64 -config.file ./grafana-agent.yaml'")
+    os.system(f"nohup gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- './agent-linux-amd64 -config.file ./grafana-agent.yaml' &>/dev/null &")
+    print("Grafana agent running as a background process")
 
 @click.command()
 def ssh():
