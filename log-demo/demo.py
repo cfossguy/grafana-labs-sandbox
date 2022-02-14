@@ -6,7 +6,7 @@ import yaml
 import webbrowser
 from dotenv import load_dotenv
 
-load_dotenv(override=True)
+load_dotenv(override=True, verbose=True)
 gcp_vm_name = os.getenv('gcp_vm_name')
 gcp_project = os.getenv('gcp_project')
 gcp_zone = os.getenv('gcp_zone')
