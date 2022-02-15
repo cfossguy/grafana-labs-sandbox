@@ -101,7 +101,7 @@ sum by(level) (count_over_time({app="tomcat_app"} |
 ```
 
 ### Step 5
-Free up the google cloud infrastructure you created by running ```./demo 6.teardown```. This will delete ALL installed
+Free up the google cloud infrastructure you created by running ```./demo teardown```. This will delete ALL installed
 software and your VM. Grafana Cloud will still have the metrics and logs data that was sent prior to teardown.
 
 ### Troubleshooting
