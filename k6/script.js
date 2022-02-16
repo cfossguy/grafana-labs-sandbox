@@ -24,10 +24,9 @@ export default function () {
   http.get('http://34.134.135.13/roulette/10');
 
   // 2 slow calls with 2 second sleep times and 50kb response payloads
-  http.get('http://34.134.135.13/slow/2/50');
-  http.get('http://34.134.135.13/slow/2/50');
+  http.get('http://34.134.135.13/slow/3000/50');
+  http.get('http://34.134.135.13/slow/3000/50');
 
-  // 1 round trip call with 3 second sleep time
-  http.get('http://34.134.135.13/trip/3/2/50');
-  http.get('http://34.134.135.13/trip/3/2/50');
+  // 2 round trip call with 3 second sleep time
+  http.get('http://34.134.135.13/trip/2000/2/50');
 }
