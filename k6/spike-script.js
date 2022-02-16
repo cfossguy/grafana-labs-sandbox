@@ -11,5 +11,5 @@ export default function () {
     let params = {
     timeout: '120s'
   };
-  http.get('http://34.134.135.13/fast/50', params);
+  http.get('http://34.134.135.13/slow/2/20', params);
 }
