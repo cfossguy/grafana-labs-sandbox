@@ -35,5 +35,5 @@ export default function () {
   http.get('http://34.134.135.13/slow/3/20');
 
   // 2 round trip call with 3 second sleep time
-  http.get('http://34.134.135.13/trip/2/2/10');
+  http.get('http://34.134.135.13/trip/5/4/20');
 }
