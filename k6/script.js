@@ -28,6 +28,8 @@ export default function () {
   http.get('http://34.134.135.13/roulette/10');
   http.get('http://34.134.135.13/roulette/10');
   http.get('http://34.134.135.13/roulette/10');
+  http.get('http://34.134.135.13/roulette/10');
+  http.get('http://34.134.135.13/roulette/10');
 
 
   // 2 slow calls with 2 second sleep times and 50kb response payloads
