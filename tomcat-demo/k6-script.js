@@ -7,5 +7,5 @@ export let options = {
 };
 
 export default function () {
-  http.get('http://localhost:8080/log-demo-1.0-SNAPSHOT/');
+  http.get('http://localhost:8080/tomcat-demo-1.0-SNAPSHOT/');
 }

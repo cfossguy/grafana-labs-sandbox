@@ -5,7 +5,7 @@ logs:
   configs:
   - clients:
     - basic_auth:
-        password: GCLOUD_PASSWORD_LOGS
+        password: GCLOUD_API_KEY_LOGS
         username: GCLOUD_USERNAME_LOGS
       url: GCLOUD_REMOTE_WRITE_URL_LOGS
     name: integrations
@@ -25,7 +25,7 @@ logs:
       - targets: [ localhost ]
         labels:
           server: tomcat_server
-          __path__: ./apache-tomcat-8.5.75/logs/*.log
+          __path__: ./apache-tomcat-*/logs/*.log
 server:
   http_listen_port: 12345
 
@@ -39,4 +39,4 @@ metrics:
       - url: GCLOUD_REMOTE_WRITE_URL_METRICS
         basic_auth:
           username: GCLOUD_USERNAME_METRICS
-          password: GCLOUD_PASSWORD_METRICS
+          password: GCLOUD_API_KEY_METRICS

@@ -54,14 +54,27 @@ def install_node():
 
 @click.command()
 def install_node_app():
-    """Provision node sample app to VM."""
-    os.system(f"gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- 'mkdir -p ./node-app'")
-    print("Created node-app directory")
-    os.system(f"gcloud compute scp ./node-app/app.mjs {gcp_vm_name}:~/node-app --zone={gcp_zone}")
-    start_node = "nodemon ./node-app/app.mjs"
+    """Provision Node API app to VM."""
+    os.system(f"gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- 'mkdir -p ./node-demo'")
+    print("Created node-demo directory")
+    os.system(f"gcloud compute scp ./app.mjs {gcp_vm_name}:~/node-demo --zone={gcp_zone}")
+    start_node = "nodemon ./node-demo/app.mjs"
     os.system(f"nohup gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- '{start_node}' &>/dev/null &")
     #os.system(f"gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- '{start_node}'")
-    print("Node running in background")
+    print("Node running in background. Run Next: ./demo 4.install-grafana-agent")
+
+@click.command()
+def install_grafana_agent():
+    """Provision Grafana Agent"""
+    gcloud_stack_id = os.getenv('gcloud_stack_id')
+    gcloud_api_key = os.getenv('gcloud_api_key')
+    install_agent_cmd = f"sudo ARCH=amd64 GCLOUD_STACK_ID='{gcloud_stack_id}' " \
+                        f"GCLOUD_API_KEY=\"{gcloud_api_key}\" " \
+                        "GCLOUD_API_URL=\"https://integrations-api-us-central.grafana.net\" /bin/sh -c " \
+                        "\"$(curl -fsSL https://raw.githubusercontent.com/grafana/agent/release/production/grafanacloud-install.sh)\""
+
+    os.system(f"gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- '{install_agent_cmd}'")
+    print("Grafana agent installed on VM.")
 
 @click.command()
 def ssh():
@@ -77,6 +90,7 @@ def teardown():
 cli.add_command(install_vm, name="1.install-vm")
 cli.add_command(install_node, name="2.install-node")
 cli.add_command(install_node_app, name="3.install-node-app")
+cli.add_command(install_grafana_agent, name="4.install-grafana-agent")
 cli.add_command(teardown, name="teardown")
 cli.add_command(ssh, name="ssh")
 

@@ -42,12 +42,12 @@ def install_vm():
 def install_dependencies():
     """Provision OpenJDK+Maven+Tomcat+K6+Grafana Agent on Linux VM."""
     install_dependencies = "sudo apt-get -qq install default-jdk; sudo apt-get -qq install unzip; " \
-                     "sudo wget -nc https://dlcdn.apache.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.zip; " \
+                     "sudo wget -nc https://dlcdn.apache.org/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.zip; " \
                      "sudo unzip -o apache-maven-*-bin.zip; " \
-                     "sudo wget -nc https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.75/bin/apache-tomcat-8.5.75.zip; " \
+                     "sudo wget -nc https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.77/bin/apache-tomcat-8.5.77.zip; " \
                      "sudo unzip -o apache-tomcat-*.zip; " \
                      "sudo chmod 755 -R ./apache-*/; " \
-                     "sudo chown -R `whoami`:`whoami` ./apache-tomcat-8.5.75; " \
+                     "sudo chown -R `whoami`:`whoami` ./apache-tomcat-8.5.77; " \
                      "sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69; " \
                      "echo \"deb https://dl.k6.io/deb stable main\" | sudo tee /etc/apt/sources.list.d/k6.list; " \
                      "sudo apt-get update; " \
@@ -57,21 +57,21 @@ def install_dependencies():
 
     os.system(f"gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- '{install_dependencies}'")
     print("OpenJDK, Maven, Tomcat and K6 downloaded and installed")
-    start_tomcat = "./apache-tomcat-8.5.75/bin/startup.sh"
+    start_tomcat = "./apache-tomcat-8.5.77/bin/startup.sh"
     os.system(f"nohup gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- '{start_tomcat}' &>/dev/null &")
     print("Tomcat started in background on VM. Run Next: ./demo 3.install-app")
 
 @click.command()
 def install_app():
-    """Provision log-demo sample app to Tomcat."""
-    os.system(f"gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- 'mkdir -p ./log-demo'")
-    print("Created log-demo directory")
-    os.system(f"gcloud compute scp ./pom.xml {gcp_vm_name}:~/log-demo --zone={gcp_zone}")
-    print("Copied pom.xml to log-demo directory")
-    os.system(f"gcloud compute scp --recurse ./src {gcp_vm_name}:~/log-demo --zone={gcp_zone}")
-    print("Copied source files to log-demo directory")
-    os.system(f"gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- './apache-maven-3.8.4/bin/mvn clean package -f ./log-demo/pom.xml;"
-              f"cp ./log-demo/target/log-demo-*.war ./apache-tomcat-*/webapps'")
+    """Provision tomcat-demo sample app to Tomcat."""
+    os.system(f"gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- 'mkdir -p ./tomcat-demo'")
+    print("Created tomcat-demo directory")
+    os.system(f"gcloud compute scp ./pom.xml {gcp_vm_name}:~/tomcat-demo --zone={gcp_zone}")
+    print("Copied pom.xml to tomcat-demo directory")
+    os.system(f"gcloud compute scp --recurse ./src {gcp_vm_name}:~/tomcat-demo --zone={gcp_zone}")
+    print("Copied source files to tomcat-demo directory")
+    os.system(f"gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- './apache-maven-3.8.5/bin/mvn clean package -f ./tomcat-demo/pom.xml;"
+              f"cp ./tomcat-demo/target/tomcat-demo-*.war ./apache-tomcat-*/webapps'")
     print("WAR file built and deployed to tomcat webapps directory")
     print("Run Next: ./demo 4.load-test-app")
 
@@ -87,14 +87,14 @@ def load_test_app():
 @click.command()
 def install_dashboard():
     """Provision a custom metrics+logs"""
-    gcloud_password_dashboards = os.getenv('gcloud_password_dashboards')
+    gcloud_api_key_dashboards = os.getenv('gcloud_api_key_dashboards')
     gcloud_domain_dashboards = os.getenv('gcloud_domain_dashboards')
     url = f"{gcloud_domain_dashboards}/api/dashboards/db"
 
     dashboard = open('dashboard.json')
     headers = {"Accept": "application/json",
                "Content-Type": "application/json",
-               "Authorization": f"Bearer {gcloud_password_dashboards}"}
+               "Authorization": f"Bearer {gcloud_api_key_dashboards}"}
     response = requests.post(url=url, data=dashboard, headers=headers)
     try:
         dashboard_url = f"{gcloud_domain_dashboards}{response.json()['url']}"
@@ -109,8 +109,8 @@ def set_grafana_agent_config_and_run():
     """Apply grafana cloud credentials to a metrics + logs grafana agent configuration."""
     gcloud_username_metrics = os.getenv('gcloud_username_metrics')
     gcloud_username_logs = os.getenv('gcloud_username_logs')
-    gcloud_password_metrics = os.getenv('gcloud_password_metrics')
-    gcloud_password_logs = os.getenv('gcloud_password_logs')
+    gcloud_api_key_metrics = os.getenv('gcloud_api_key_metrics')
+    gcloud_api_key_logs = os.getenv('gcloud_api_key_logs')
     gcloud_remote_write_url_metrics = os.getenv('gcloud_remote_write_url_metrics')
     gcloud_remote_write_url_logs = os.getenv('gcloud_remote_write_url_logs')
 
@@ -119,11 +119,11 @@ def set_grafana_agent_config_and_run():
     with open(r'./grafana-agent-template.yaml') as file:
         contents = yaml.load(file, Loader=yaml.FullLoader)
     with open(r'./.config/grafana-agent.yaml', 'w') as file:
-        contents['metrics']['global']['remote_write'][0]['basic_auth']['password'] = gcloud_password_metrics
+        contents['metrics']['global']['remote_write'][0]['basic_auth']['password'] = gcloud_api_key_metrics
         contents['metrics']['global']['remote_write'][0]['basic_auth']['username'] = gcloud_username_metrics
         contents['metrics']['global']['remote_write'][0]['url'] = gcloud_remote_write_url_metrics
 
-        contents['logs']['configs'][0]['clients'][0]['basic_auth']['password'] = gcloud_password_logs
+        contents['logs']['configs'][0]['clients'][0]['basic_auth']['password'] = gcloud_api_key_logs
         contents['logs']['configs'][0]['clients'][0]['basic_auth']['username'] = gcloud_username_logs
         contents['logs']['configs'][0]['clients'][0]['url'] = gcloud_remote_write_url_logs
         yaml.dump(contents, file)

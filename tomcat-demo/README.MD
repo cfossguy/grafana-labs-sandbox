@@ -1,4 +1,4 @@
-# Log Demo Guide
+# Tomcat Demo Guide
 This demo is an **infrastructure as code** walk-thru for configuring a 
 grafana agent to collect metrics and logs for a legacy tomcat application.
 This demo guide is designed for usage with Google Cloud. 
@@ -56,13 +56,13 @@ gcp_service_account=YOUR_GCP_SERVICE_ACCOUNT
 gcloud_username_metrics=YOUR_GRAFANA_CLOUD_METRICS_USERNAME
 gcloud_username_logs=YOUR_GRAFANA_CLOUD_LOGS_USERNAME
 
-gcloud_password_metrics=YOUR_GRAFANA_CLOUD_METRICS_PASSWORD
-gcloud_password_logs=YOUR_GRAFANA_CLOUD_LOGS_PASSWORD
+gcloud_api_key_metrics=YOUR_GRAFANA_CLOUD_METRICS_API_KEY
+gcloud_api_key_logs=YOUR_GRAFANA_CLOUD_LOGS_API_KEY
 
 gcloud_remote_write_url_metrics=YOUR_GRAFANA_CLOUD_METRICS_REMOTE_WRITE_URL
 gcloud_remote_write_url_logs=YOUR_GRAFANA_CLOUD_LOGS_REMOTE_WRITE_URL
 
-gcloud_password_dashboards=YOUR_GRAFANA_API_KEY (can create in Grafana UI: 'Configuration -> 'API Keys')
+gcloud_api_key_dashboards=YOUR_GRAFANA_API_KEY (can create in Grafana UI: 'Configuration -> 'API Keys')
 gcloud_domain_dashboards=YOUR_DASHBOARD_BASE_URL (ie: https://yourdomain.grafana.net)
 ```
 
