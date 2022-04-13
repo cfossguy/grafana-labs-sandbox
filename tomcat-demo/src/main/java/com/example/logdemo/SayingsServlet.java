@@ -1,18 +1,23 @@
 package com.example.logdemo;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.annotation.WebServlet;
+import java.util.Random;
 
 @WebServlet(name = "sayingsServlet", value = "/sayings-servlet")
 public class SayingsServlet extends HttpServlet {
 
     final static Logger logger = LogManager.getLogger(SayingsServlet.class);
     private HashMap<Integer,String> phrases;
+    private long lastErrorTime = 0;
 
     public void init() {
         phrases = new HashMap<>();
@@ -41,21 +46,24 @@ public class SayingsServlet extends HttpServlet {
                 message = getPhrase(false);
                 logger.warn(String.format("Log ID: %s - %s", id, message));
                 out.println(String.format("ID: %s - Message: %s", id, message));
-                Thread.sleep(100);
 
                 for (int j = 0; j < 10; j++){
                     id = String.format("%d-%d",System.currentTimeMillis(),i);
                     message = getPhrase(false);
                     logger.info(String.format("Log ID: %s - %s", id, message));
                     out.println(String.format("ID: %s - Message: %s", id, message));
-                    Thread.sleep(100);
                 }
             }
             message = getPhrase(true);
             id = String.format("%d-%d",System.currentTimeMillis(),0);
-            logger.error(String.format("Log ID: %s - %s", id, message));
-            out.println(String.format("ID: %s - Message: %s", id, message));
-            Thread.sleep(1000);
+            if (timeForError()) {
+                logger.error(String.format("Log ID: %s - %s", id, message));
+                out.println(String.format("ID: %s - Message: %s", id, message));
+            }
+
+            Random rand = new Random();
+            int n = rand.nextInt(5000);
+            Thread.sleep(100 + n);
         }
 
         catch(InterruptedException exc){
@@ -81,5 +89,20 @@ public class SayingsServlet extends HttpServlet {
         }
 
         return phrases.get(random_int);
+    }
+
+    private boolean timeForError(){
+
+        if (lastErrorTime == 0){
+            lastErrorTime = System.currentTimeMillis();
+            return true;
+        }
+
+        if (lastErrorTime < System.currentTimeMillis() - 240000){
+            lastErrorTime = System.currentTimeMillis();
+            return true;
+        }
+
+        return false;
     }
 }

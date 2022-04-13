@@ -30,7 +30,7 @@ def install_vm():
                        "https://www.googleapis.com/auth/service.management.readonly," \
                        "https://www.googleapis.com/auth/trace.append --tags=http-server,https-server" \
                        " --create-disk=auto-delete=yes,boot=yes,device-name=instance-1," \
-                       "image=projects/ubuntu-os-cloud/global/images/ubuntu-1804-bionic-v20220131,mode=rw,size=10," \
+                       "image=projects/ubuntu-os-cloud/global/images/ubuntu-1804-bionic-v20220325,mode=rw,size=10," \
                        f"type=projects/{gcp_project}/zones/{gcp_zone}/diskTypes/pd-balanced " \
                        "--no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any"
 
@@ -44,10 +44,10 @@ def install_dependencies():
     install_dependencies = "sudo apt-get -qq install default-jdk; sudo apt-get -qq install unzip; " \
                      "sudo wget -nc https://dlcdn.apache.org/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.zip; " \
                      "sudo unzip -o apache-maven-*-bin.zip; " \
-                     "sudo wget -nc https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.77/bin/apache-tomcat-8.5.77.zip; " \
+                     "sudo wget -nc https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.78/bin/apache-tomcat-8.5.78.zip; " \
                      "sudo unzip -o apache-tomcat-*.zip; " \
                      "sudo chmod 755 -R ./apache-*/; " \
-                     "sudo chown -R `whoami`:`whoami` ./apache-tomcat-8.5.77; " \
+                     "sudo chown -R `whoami`:`whoami` ./apache-tomcat-8.5.78; " \
                      "sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69; " \
                      "echo \"deb https://dl.k6.io/deb stable main\" | sudo tee /etc/apt/sources.list.d/k6.list; " \
                      "sudo apt-get update; " \
@@ -57,7 +57,7 @@ def install_dependencies():
 
     os.system(f"gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- '{install_dependencies}'")
     print("OpenJDK, Maven, Tomcat and K6 downloaded and installed")
-    start_tomcat = "./apache-tomcat-8.5.77/bin/startup.sh"
+    start_tomcat = "./apache-tomcat-8.5.78/bin/startup.sh"
     os.system(f"nohup gcloud compute ssh --zone {gcp_zone} {gcp_vm_name} -- '{start_tomcat}' &>/dev/null &")
     print("Tomcat started in background on VM. Run Next: ./demo 3.install-app")
 

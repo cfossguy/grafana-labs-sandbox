@@ -1,4 +1,5 @@
-#copy/pasted from Grafana Enterprise Integrations Management(Kubernetes)
+cat <<'EOF' |
+
 kind: ConfigMap
 metadata:
   name: grafana-agent
@@ -10,16 +11,16 @@ data:
     metrics:
       wal_directory: /tmp/grafana-agent-wal
       global:
-        scrape_interval: 15s
+        scrape_interval: 60s
         external_labels:
-          cluster: YOUR_CLUSTER_NAME
+          cluster: cloud
       configs:
       - name: integrations
         remote_write:
-        - url: YOUR_REMOTE_WRITE_URL
+        - url: https://prometheus-prod-10-prod-us-central-0.grafana.net/api/prom/push
           basic_auth:
-            username: YOUR_REMOTE_WRITE_USERNAME
-            password: YOUR_REMOTE_WRITE_PASSWORD
+            username: 335582
+            password: eyJrIjoiZDVmZTQ1MDhhYWM3MmUyMzUyZWIzNjY2ZGM0NWQ5OTdhZGZhNTVkMSIsIm4iOiJzZWp3aWxsaWFtcy1lYXN5c3RhcnQtcHJvbS1wdWJsaXNoZXIiLCJpZCI6NjAzODY2fQ==
         scrape_configs:
         - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
           job_name: integrations/kubernetes/cadvisor
@@ -75,12 +76,3 @@ data:
                 regex: ksm-kube-state-metrics
                 source_labels:
                   - __meta_kubernetes_service_name
-        - job_name: integrations/spring-boot
-          metrics_path: /actuator/prometheus
-          kubernetes_sd_configs:
-            - role: endpoints
-          relabel_configs:
-            - source_labels: [ __meta_kubernetes_endpoints_name ]
-              target_label: app
-              action: replace
-              replacement: $1

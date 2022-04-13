@@ -31,6 +31,12 @@ server:
 
 metrics:
   wal_directory: /tmp/grafana-agent-wal
+  configs:
+    - name: integrations
+      scrape_configs:
+        - job_name: jvm-integration
+          static_configs:
+            - targets: [ 'jvm:1234' ]
   global:
     external_labels:
       app: tomcat_app
