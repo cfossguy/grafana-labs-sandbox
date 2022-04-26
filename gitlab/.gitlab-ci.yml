@@ -1,0 +1,19 @@
+stages:
+	- build
+	- test
+
+build the car:
+  stage: build
+  script:
+	- touch car.txt
+	- echo "chassis" > car.txt
+
+  artifacts:
+	  paths:
+		  - build/
+test the car:
+  stage: test
+  script:
+	- test -f build/car.txt
+	- cd build
+	- grep "chassis"
