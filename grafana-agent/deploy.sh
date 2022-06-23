@@ -22,7 +22,7 @@ kubectl rollout restart deployment/grafana-agent -n $YOUR_NAMESPACE
 echo "INSTALLING LOGS BARE AGENT"
 wget -O agent-loki.yaml https://raw.githubusercontent.com/grafana/agent/main/production/kubernetes/agent-loki.yaml
 cp agent-loki.yaml ./.config
-sed -i '' "s/YOUR_NAMESPACE/$YOUR_NAMESPACE/g" .config/agent-loki.yaml
+sed -i '' 's/${NAMESPACE}/YOUR_NAMESPACE/g' .config/agent-loki.yaml
 kubectl apply -f .config/agent-loki.yaml -n $YOUR_NAMESPACE
 
 echo "INSTALLING LOGS AGENT CONFIGMAP (CONTAINS SECRETS)"
@@ -39,7 +39,7 @@ kubectl rollout restart ds/grafana-agent-logs -n $YOUR_NAMESPACE
 echo "INSTALLING TRACES AGENT"
 wget -O agent-traces.yaml https://raw.githubusercontent.com/grafana/agent/main/production/kubernetes/agent-traces.yaml
 cp agent-traces.yaml ./.config
-sed -i '' "s/YOUR_NAMESPACE/$YOUR_NAMESPACE/g" .config/agent-traces.yaml
+sed -i '' 's/${NAMESPACE}/$YOUR_NAMESPACE/g' .config/agent-traces.yaml
 kubectl apply -f .config/agent-traces.yaml -n $YOUR_NAMESPACE
 
 echo "INSTALLING TRACES AGENT CONFIGMAP (CONTAINS SECRETS)"

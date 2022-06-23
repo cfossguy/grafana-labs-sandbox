@@ -1,0 +1,7 @@
+/Users/jwilliams/PycharmProjects/grafana-labs-sandbox/WebApplication1/WebApplication1/bin/Release/net6.0/publish/WebApplication1
+/Users/jwilliams/PycharmProjects/grafana-labs-sandbox/WebApplication1/WebApplication1/bin/Release/net6.0/publish/appsettings.Development.json
+/Users/jwilliams/PycharmProjects/grafana-labs-sandbox/WebApplication1/WebApplication1/bin/Release/net6.0/publish/appsettings.json
+/Users/jwilliams/PycharmProjects/grafana-labs-sandbox/WebApplication1/WebApplication1/bin/Release/net6.0/publish/WebApplication1.dll
+/Users/jwilliams/PycharmProjects/grafana-labs-sandbox/WebApplication1/WebApplication1/bin/Release/net6.0/publish/WebApplication1.deps.json
+/Users/jwilliams/PycharmProjects/grafana-labs-sandbox/WebApplication1/WebApplication1/bin/Release/net6.0/publish/WebApplication1.runtimeconfig.json
+/Users/jwilliams/PycharmProjects/grafana-labs-sandbox/WebApplication1/WebApplication1/bin/Release/net6.0/publish/WebApplication1.pdb

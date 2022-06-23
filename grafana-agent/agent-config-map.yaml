@@ -84,3 +84,12 @@ data:
               target_label: app
               action: replace
               replacement: $1
+        - job_name: integrations/dotnet-core
+          metrics_path: /metrics
+          kubernetes_sd_configs:
+            - role: endpoints
+          relabel_configs:
+            - source_labels: [ __meta_kubernetes_endpoints_name ]
+              target_label: app
+              action: replace
+              replacement: $1
