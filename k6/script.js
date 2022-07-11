@@ -12,28 +12,28 @@ export let options = {
 
 export default function () {
   // 10 fast calls with 10kb and 20kb response payloads
-  http.get('http://34.134.135.13/fast/10');
-  http.get('http://34.134.135.13/fast/20');
-  http.get('http://34.134.135.13/fast/10');
-  http.get('http://34.134.135.13/fast/20');
-  http.get('http://34.134.135.13/fast/10');
-  http.get('http://34.134.135.13/fast/10');
-  http.get('http://34.134.135.13/fast/10');
-  http.get('http://34.134.135.13/fast/10');
-  http.get('http://34.134.135.13/fast/10');
-  http.get('http://34.134.135.13/fast/10');
+  http.get('http://35.224.140.127/fast/10');
+  http.get('http://35.224.140.127/fast/20');
+  http.get('http://35.224.140.127/fast/10');
+  http.get('http://35.224.140.127/fast/20');
+  http.get('http://35.224.140.127/fast/10');
+  http.get('http://35.224.140.127/fast/10');
+  http.get('http://35.224.140.127/fast/10');
+  http.get('http://35.224.140.127/fast/10');
+  http.get('http://35.224.140.127/fast/10');
+  http.get('http://35.224.140.127/fast/10');
 
   // 3 roulette calls will fail 1 out of 10
-  http.get('http://34.134.135.13/roulette/10');
-  http.get('http://34.134.135.13/roulette/10');
-  http.get('http://34.134.135.13/roulette/10');
-  http.get('http://34.134.135.13/roulette/10');
-  http.get('http://34.134.135.13/roulette/10');
+  http.get('http://35.224.140.127/roulette/10');
+  http.get('http://35.224.140.127/roulette/10');
+  http.get('http://35.224.140.127/roulette/10');
+  http.get('http://35.224.140.127/roulette/10');
+  http.get('http://35.224.140.127/roulette/10');
 
 
   // 2 slow calls with 2 second sleep times and 50kb response payloads
-  http.get('http://34.134.135.13/slow/3/20');
+  http.get('http://35.224.140.127/slow/3/20');
 
   // 2 round trip call with 3 second sleep time
-  http.get('http://34.134.135.13/trip/5/2/20');
+  http.get('http://35.224.140.127/trip/5/2/20');
 }
