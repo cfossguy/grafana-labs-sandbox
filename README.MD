@@ -178,3 +178,6 @@ kubectl delete ns loki
 
 #### LogQL queries
 sum by (method, log_level) (count_over_time({job="default/spring-node"} | logfmt [1m]))
+
+#### ML Queries
+sum by (uri) (rate(http_server_requests_seconds_count{uri="/fast/{k}"}[$__interval]))

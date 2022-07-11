@@ -1,0 +1,14 @@
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+
+helm install development grafana/mimir-distributed -f ./values.yaml --set 'minio.enabled=true' --set 'mimir.fullname=development-mimir'\
+--set 'ruler-storage.gcs.bucket-name=se-jwilliams-mimir-alertmgr' \
+--set 'ruler-storage.gcs.service-account=vvv';
+
+helm install development grafana/mimir-distributed -f ./values.yaml --set 'minio.enabled=false' --set 'mimir.fullname=development-mimir';
+helm uninstall development grafana/mimir-distributed
+
+kubectl port-forward service/grafana 3000:3000;
+kubectl port-forward service/development-mimir-nginx 8080:80;
+
+Slack Thread - https://raintank-corp.slack.com/archives/CKF7R1F6Z/p1653344001485229?thread_ts=1653342061.212589&cid=CKF7R1F6Z
