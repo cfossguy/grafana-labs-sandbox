@@ -4,6 +4,7 @@ metadata:
   labels:
     app: spring-node
   name: spring-node
+  namespace: spring-apps
 spec:
   replicas: 3
   selector:
@@ -35,7 +36,7 @@ metadata:
   labels:
     app: spring-node
   name: spring-node
-  namespace: default
+  namespace: spring-apps
 spec:
   externalTrafficPolicy: Cluster
   ports:
