@@ -6,6 +6,9 @@
 **/.DS_Store
 
 # exclude local deploy configuration files and grafana-agent files that contain secrets
+**/.terraform/**
+/**/secret.tfvars
+/**/.terraform.lock.hcl
 /**/.config/**
 /**/_*.yml
 /**/_*.sh
