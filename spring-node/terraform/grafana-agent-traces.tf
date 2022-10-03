@@ -265,9 +265,9 @@ resource "kubernetes_manifest" "configmap_spring_apps_grafana_agent_traces" {
                   zipkin:
               remote_write:
                 - basic_auth:
-                      password: eyJrIjoiMmVjNGU0NGQ0ODEzMDhjYWIxNDQyNzM5NjRlMzZhNTMyZWM5N2VhNCIsIm4iOiJhZ2VudC10ZW1wbyIsImlkIjo2MDM4NjZ9
-                      username: 163274
-                  endpoint: tempo-us-central1.grafana.net:443
+                      password: ${var.traces_password}
+                      username: ${var.traces_username}
+                  endpoint: ${var.traces_url}
                   retry_on_failure:
                       enabled: false
               scrape_configs:
